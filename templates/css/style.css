@@ -1,0 +1,80 @@
+.main-table {
+	margin-bottom: 20px;
+}
+td , th{
+	border: none !important;
+}
+th a {
+	color: #fff;
+}
+.table-head {
+	background: #25b695;
+	color: #fff !important;
+	padding-top: 14px;
+	padding-bottom: 14px;
+	font-size: 14px !important;
+	font-family: "Open Sans", Arial, Helvetica, sans-serif !important;
+}
+.navbar-default {
+	padding: 0px !important;
+	margin: 0px !important;
+}
+.online {
+	color: #0BD318;
+}
+.offline {
+	color: #FF3B30;
+}
+.forum-icon {
+	padding-right: 10px;
+}
+#site-footer {
+	background-color: #eee;
+	color: #000;
+}
+#site-footer {
+	font-size: 1em;
+	padding: 20px 0;
+	text-align: center;
+}
+.btn-add-topic {
+	border-color: #25b695 #25b695 #1f967b;
+	background-color: #25b695;
+	color: #ffffff;
+}
+
+.btn-add-topic {
+	cursor: pointer;
+	display: inline-block;
+	height: 35px;
+	line-height: 33px;
+	font-size: 12px;
+	white-space: nowrap;
+	border-width: 1px 1px 2px;
+	border-style: solid;
+	padding: 0 20px;
+	font-family: "Open Sans", Arial, Helvetica, sans-serif;
+	position: relative;
+	text-decoration: none !important;
+	outline-style: none !important;
+	vertical-align: bottom;
+	border-radius: 3px;
+	transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+.btn-add-topic:hover {
+	color: #ffffff;
+}
+
+
+
+.post {
+	background-color: #DDDFE3 !important;
+}
+
+.post {
+	padding: 0;
+	margin-bottom: 20px;
+	background-repeat: no-repeat;
+	background-position: 100% 0;
+	position: relative;
+}

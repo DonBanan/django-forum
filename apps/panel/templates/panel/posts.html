@@ -1,0 +1,7 @@
+{% load humanize %}
+{% for post in posts %}
+	<p>{{ post.user }}</p>
+	<a href="{% url 'topic' post.topic.subcategory.slug post.topic.id %}">{{ post.topic.title }}</a>
+	{{ post.message }}
+	<p>{{ post.created_at|naturaltime }}</p>
+{% endfor %}

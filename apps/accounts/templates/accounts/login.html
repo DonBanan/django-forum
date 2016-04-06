@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+
+		<h1 class="">Войти</h1>
+		{% if next %}
+			<form action="/login/?next={{next}}" method="post">
+		{% else %}
+			<form action="{% url 'login' %}" method="post">
+				{% csrf_token %}
+				{{ form.errors }}
+				{{ form }}
+				<input type="submit" class="b-form__submit" value="Войти">
+				<input type="hidden" name="next" value="{{ next }}" />
+			</form>
+		{% endif %}
+
+{% endblock %}

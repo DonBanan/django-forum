@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+{% load thumbnail %}
+{% load humanize %}
+
+{% block content %}
+
+{% with request.user.get_profile as profile %}
+
+ <table>
+   <tr><th>Last Seen</th><td>{% if profile.last_seen %}{{ profile.last_seen|timesince }}{% else %}awhile{% endif %} ago</td></tr>
+   <tr><th>Online</th><td>{{ profile.online }}</td></tr>
+ </table>
+
+{% endwith %}
+
+	<h1>Профиль {{ profile }}</h1>
+	<p>{{ profile.first_name }}</p>
+	<p>{{ profile.last_name }}</p>
+	<p>{{ profile.email }}</p>
+	{% for lang in profile.user_languages.all %}
+		<p>{{ lang.title }}</p>
+	{% endfor %}
+	{% if user.avatar %}
+		{% thumbnail profile.avatar "300x300" crop="center" as im %}
+			<img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
+		{% endthumbnail %}
+	{% endif %}
+	{% if profile == user %}
+	<ul>
+		<li><a href="">Сменить пароль</a></li>
+		<li><a href="{% url 'edit_profile' user.id %}">Редактировать профиль</a></li>
+	</ul>
+	{% endif %}
+
+	{% if profile == user %}
+		<h1>Мои топики</h1>
+	{% else %}
+		<h1>Все топики {{ profile }}</h1>
+	{% endif %}
+	<div>
+		{% for topic in topics %}
+			<a href="{% url 'topic' topic.subcategory.slug topic.id %}">{{ topic.title }}</a>
+			<p>{{ topic.posts.count }}</p>
+			<p>{{ topic.created_at|naturaltime }}</p>
+		{% endfor %}
+	</div>
+
+	{% if profile == user %}
+		<h1>Мои посты</h1>
+	{% else %}
+		<h1>Все посты {{ profile }}</h1>
+	{% endif %}
+	<div>
+		{% for post in posts %}
+			<a href="{% url 'topic' post.topic.subcategory.slug post.topic.id %}">Тема</a>
+			<p>{{ post.created_at|naturaltime }}</p>
+		{% endfor %}
+	</div>
+
+	{% if profile == user %}
+		<h1>Входящие сообщения</h1>
+		<div>
+		{% for msg in profile.recipient.all %}
+		{{ msg.user }}
+		<p>{{ msg.id }}</p>
+		<p>{{ msg.message }}</p>
+		<p>{{ msg.created_at|naturaltime }}</p>
+		<a href="{% url 'send_message' msg.id %}">Ответить</a>
+		<a href="{% url 'del_message' msg.id %}">Удалить</a>
+		{% endfor %}
+	</div>
+	{% endif %}
+
+	{% if profile == user %}
+		<h1>Отправленные сообщения</h1>
+		<div>
+		{% for msg in profile.personalmessage_user.all %}
+		<p>{{ msg.id }}</p>
+		<p>{{ msg.message }}</p>
+		<p>{{ msg.created_at|naturaltime }}</p>
+		<a href="{% url 'del_message' msg.id %}">Удалить</a>
+		{% endfor %}
+	</div>
+	{% endif %}
+
+	{% if profile == user %}
+		<h1>Корзина</h1>
+	{% endif %}
+{% endblock %}

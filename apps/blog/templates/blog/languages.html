@@ -1,0 +1,6 @@
+{% extends 'base.html' %}
+{% block content %}
+	{% for language in languages %}
+		<a href="{% url 'language' language.slug %}">{{ language.title }} ( {{ language.subcategories.count }} )</a>
+	{% endfor %}
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block content %}
+	<form action="" method="post" enctype="multipart/form-data">
+		{% csrf_token %}
+		{{ personal_form.errors }}
+		<div>
+			{% for field in personal_form %}
+				<label>{{ field.label }}</label>
+				{{ field }}
+			{% endfor %}
+			<input type="submit">
+		</div>
+	</form>
+{% endblock %}

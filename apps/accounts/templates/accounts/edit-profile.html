@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<form method="post" enctype="multipart/form-data">
+	{% csrf_token %}
+	{{ form.management_form }}
+	{{ form.errors }}
+
+	{% for field in form %}
+		<div class="{{ field.name }}">
+			<label>
+				{{ field.label }}
+			</label>
+			{% if field.errors %}
+				<span class="errors_field control-label">{{ field.errors }}</span>
+			{% else %}
+				<span class="help-text">{{ field.help_text }}</span>
+			{% endif %}
+			{{ field }}
+		</div>
+	{% endfor %}
+	<input type="submit">
+</form>
+
+{% endblock %}

@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% load thumbnail %}
+{% load humanize %}
+{% block content %}
+	<div class="jumbotron no-margin-bottom no-padding-bottom">
+		<div class="container text-center">
+			<div id="site-logo">
+				<a href="/">
+					<img src="templates/img/my-logo.png" width="100" height="76" alt="" title="" class="img-responsive center-block">
+				</a>
+			</div>
+			<p>Форум для программистов, дизайнеров и сисадминов</p>
+		</div>
+	</div>
+	{% for language in languages %}
+		<table class="table table-striped table-bordered main-table">
+			<thead class="topiclist table-head">
+				<tr>
+					<th class="forum-name col-xs-3"><i class="fa fa-sitemap"></i> <a href="{{ language.get_absolute_url }}"> {{ language.title }}</a></th>
+					<th class="topics text-center col-xs-3"><i class="fa fa-comments-o"></i> Топиков</th>
+					<th class="posts text-center col-xs-3"><i class="fa fa-pencil-square-o"></i> Ответов</th>
+					<th class="lastpost col-xs-3"><i class="fa fa-history"></i> <span>Последний ответ</span></th>
+				</tr>
+			</thead>
+			<tbody class="topiclist forums">
+			{% for sub in language.subcategories.all %}
+				<tr>
+					<td class="forum-name">
+						<span class="pull-left forum-icon">
+							<i class="fa fa-folder fa-fw"></i>
+						</span>
+							<a href="{% url 'subcategory' sub.programming_language.slug sub.slug %}" class="forumtitle">{{ sub.title }}</a><br>
+					</td>
+					<td class="topics text-center"><span class="badge">{{ sub.topics_subcategory.count }}</span></td>
+					<td class="posts text-center"><span class="badge">{{ sub.posts_count.topic_count.count }}</span></td>
+					<td class="lastpost">
+						{% for topic in sub.topics_subcategory.all|slice:":1" %}
+							<span><dfn>Последний ответ</dfn> от <a href="">{{ topic.last_post.post.user }}</a>
+						{% if topic.user.avatar %}
+							{% thumbnail topic.user.avatar "20x20" crop="center" as im %}
+								<img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
+							{% endthumbnail %}
+						{% endif %}
+						<br>{{ topic.last_post.post.created_at|naturaltime }}</span>
+						{% endfor %}
+					</td>
+				</tr>
+			{% endfor %}
+			</tbody>
+		</table>
+	{% endfor %}
+
+
+	<div class="panel panel-info">
+		<div class="panel-heading">
+			<h3 class="panel-title"><i class="fa fa-globe"></i> Пользователи  Online</h3>
+		</div>
+		<div class="panel-body">
+			{% for user in users %}
+				{% if user.online %}
+					{% if forloop.last %}
+						<span class="online">{{ user }}</span>
+					{% else %}
+						<span class="online">{{ user }}</span>,
+					{% endif %}
+				{% endif %}
+			{% endfor %}
+		</div>
+	</div>
+
+	<div class="panel panel-info">
+		<div class="panel-heading">
+			<h3 class="panel-title"><i class="fa fa-area-chart"></i> Статистика</h3>
+		</div>
+		<div class="panel-body">
+			<p>Всего топиков <strong>{{ topics }}</strong> • Всего ответов <strong>{{ posts }}</strong> • Всего юзеров <strong>{{ users.count }}</strong></p>
+			<hr>
+			<p class="right">Сегодня {{ now|date:'d (l) F Y' }}  время: {{ now|date:'H:i' }}</p>
+		</div>
+	</div>
+{% endblock content %}

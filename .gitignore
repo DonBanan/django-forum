@@ -1,0 +1,8 @@
+.DS_Store
+TZ.txt
+api.txt
+db.sqlite3
+function.txt
+/media/
+/venv/
+structure.txt

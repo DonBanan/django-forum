@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block content %}
+{% for user in users %}
+	<div>
+		<a href="{% url 'profile' user.id %}">Логин: {{ user.username }}</a>
+		{% if user.online %}
+			<span class="online">Online</span>
+		{% else %}
+			<span class="offline">Offline</span>
+		{% endif %}
+		{% if user.is_moderator %}
+			<p>Модератор</p>
+		{% endif %}
+		{% if user.is_superuser %}
+			<p>Главный админ</p>
+		{% endif %}
+		<p>Был на сайте: {{ user.last_login }}</p>
+		<p>Дата регистрации: {{ user.date_joined }}</p>
+		{% if request.user.is_superuser %}
+			<a href="{% url 'del_profile' user.id %}">Удалить юзера</a>
+		{% endif %}
+	</div>
+{% endfor %}
+
+{% endblock %}

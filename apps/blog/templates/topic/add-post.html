@@ -1,0 +1,11 @@
+<form action="{% url 'add_post' topic.id %}" method="post">
+	{% csrf_token %}
+	{{ post_form.errors }}
+	<div>
+		{% for field in post_form %}
+			<label>{{ field.label }}</label>
+			{{ field }}
+		{% endfor %}
+		<input type="submit">
+	</div>
+</form>

@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% load thumbnail %}
+{% load humanize %}
+
+{% block content %}
+<div class="jumbotron no-margin-bottom no-padding-bottom">
+	<div class="container text-center">
+		<p>{{ subcategory.title }}</p>
+		<a class="btn-add-topic" href="{% url 'add_topic' subcategory.slug %}"><span class="btn-label"><i class="fa fa-plus-square"></i></span> Добавить топик</a>
+	</div>
+</div>
+
+<div class="forumbg table-responsive ">
+	<table class="table table-striped table-bordered">
+		<thead class="topiclist table-head">
+			<tr class="header">
+				<th class="forum-name"><i class="fa fa-comments-o"></i> Топики</th>
+				<th class="posts text-center"><i class="fa fa-reply"></i> Ответов</th>
+				<th class="views text-center"><i class="fa fa-eye"></i> Просмотров</th>
+				<th class="views text-center"><i class="fa fa-star"></i></i> Рейтинг</th>
+				<th class="lastpost"><i class="fa fa-history"></i> <span>Последний ответ</span></th>
+			</tr>
+		</thead>
+		{% for topic in subcategory.topics_subcategory.all %}
+		<tbody class="topiclist topics">
+			<tr class="t-row">
+				<td class="topic-name " title="No unread posts">
+					<div class="pull-left forum-topic-icon">
+						<span>
+							<i class="fa fa-file-text-o fa-fw"></i>
+						</span>
+					</div>
+					<a href="{% url 'topic' subcategory.slug topic.id %}" class="topictitle"><strong>{{ topic.title }}</strong></a><br>
+					<small>от <a href="" style="color: #AA0000;" class="username-coloured">{{ topic.user }}</a> » {{ topic.created_at|naturaltime }}</small>
+				</td>
+				<td class="posts text-center">
+					<span class="badge">{{ topic.posts.count }}</span>
+				</td>
+				<td class="views text-center">
+				{% if topic.count_views == 0 %}
+					<span class="badge">0</span>
+				{% else %}
+					<span class="badge">{{ topic.count_views }}</span>
+				{% endif %}
+				</td>
+				<td class="lastpost text-center">
+					<i class="fa fa-thumbs-up"></i> {{ topic.good_vote }}</br>
+					<i class="fa fa-thumbs-down"></i> {{ topic.bad_vote }}
+				</td>
+				<td class="lastpost">
+					{% if topic.last_post %}
+					<span><dfn>Последний ответ </dfn>от <a href="">{{ topic.last_post.post.user }}</a>
+						{% if topic.user.avatar %}
+							{% thumbnail topic.last_post.post.user.avatar "20x20" crop="center" as im %}
+								<img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
+							{% endthumbnail %}
+						{% endif %}
+						<br>{{ topic.last_post.post.created_at|naturaltime }}
+					</span>
+					{% endif %}
+				</td>
+			</tr>
+		</tbody>
+		{% endfor %}
+	</table>
+</div>
+{% endblock %}

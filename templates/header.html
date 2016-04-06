@@ -1,0 +1,56 @@
+<nav class="navbar navbar-default">
+<div class="container-fluid">
+	<!-- Brand and toggle get grouped for better mobile display -->
+	<div class="navbar-header">
+	  <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+		<span class="sr-only">Toggle navigation</span>
+		<span class="icon-bar"></span>
+		<span class="icon-bar"></span>
+		<span class="icon-bar"></span>
+	  </button>
+	  <a class="navbar-brand" href="#">Next IT</a>
+	</div>
+
+	<!-- Collect the nav links, forms, and other content for toggling -->
+	<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+	  <ul class="nav navbar-nav">
+		<li><a href="/">Главная</a></li>
+		<li class="dropdown">
+		  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Категории <span class="caret"></span></a>
+		  <ul class="dropdown-menu">
+		  	{% for category in categories %}
+				<li><a href="{{ category.get_absolute_url }}">{{ category.title }}</a></li>
+			{% endfor %}
+		  </ul>
+		</li>
+	  </ul>
+	  <ul class="nav navbar-nav navbar-right">
+		<li class="dropdown">
+		{% if user.is_authenticated %}
+			<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+				{% if user.online %}
+					<span class="online">Online</span>
+				{% else %}
+					<span class="offline">Offline</span>
+				{% endif %}{{ user }}<span class="caret"></span>
+			</a>
+		{% else %}
+			<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Вход<span class="caret"></span></a>
+		{% endif %}
+		<ul class="dropdown-menu">
+			{% if user == is_moderator or user.is_superuser %}
+				<li><a href="{% url 'panel' %}">Управление сайтом</a></li>
+			{% endif %}
+			{% if user.is_authenticated %}
+				<li><a href="{% url 'profile' user.id %}">Профиль</a></li>
+				<li><a href="{% url 'logout' %}">Выход</a></li>
+			{% else %}
+				<li><a href="{% url 'singup' %}">Регистрация</a></li>
+				<li><a href="{% url 'login' %}">Вход</a></li>
+			{% endif %}
+		  </ul>
+		</li>
+	  </ul>
+	</div>
+  </div>
+</nav>

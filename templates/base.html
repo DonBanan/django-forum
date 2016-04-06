@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		{% include "head.html" %}
+	</head>
+	<body>
+		<header>
+			{% include "header.html" %}
+		</header>
+
+		<section>
+			{{ seo.intro|safe }}
+				{% block content %}{% endblock %}
+			{{ seo.outro|safe }}
+		</section>
+		<footer>
+			{% include "footer.html" %}
+		</footer>
+	</body>
+</html>

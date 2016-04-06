@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% load thumbnail %}
+{% load humanize %}
+{% block content %}
+<h1>{{ topic.count_views }}</h1>
+<div>
+	{% if user.is_authenticated %}
+		<p>{{ topic.good_vote }}</p>
+		<p>{{ topic.bad_vote }}</p>
+		{% if topic.user != user %}
+			<a href="{% url 'good_vote' topic.id %}">Хороший топик</a>
+			<a href="{% url 'bad_vote' topic.id %}">Плохой топик</a>
+		{% endif %}
+	{% endif %}
+
+	<p>{{ topic.user }}</p>
+	{% if topic.user.avatar %}
+		{% thumbnail topic.user.avatar "100x100" crop="center" as im %}
+			<img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
+		{% endthumbnail %}
+	{% endif %}
+	<p>{{ topic.title }}</p>
+	{{ topic.description|safe }}
+	<p>{{ topic.created_at|naturaltime }}</p>
+</div>
+
+{% if user == topic.user %}
+	<a href="{% url 'edit_topic' topic.id %}">Редактировать</a>
+	<a href="{% url 'del_topic' topic.id %}">Удалить</a>
+{% endif %}
+
+<div>
+	{% for post in topic.posts.all %}
+		<div>
+			{% if post.user == user %}
+				<p>Вы</p>
+			{% else %}
+				<p>{{ post.user }}</p>
+			{% endif %}
+			{% if post.user.avatar %}
+				{% thumbnail post.user.avatar "100x100" crop="center" as im %}
+					<img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
+				{% endthumbnail %}
+			{% endif %}
+			{{ post.message }}
+			<p>{{ post.created_at|naturaltime }}</p>
+			{% if user == post.user %}
+				<a href="{% url 'edit_post' post.id %}" class="edit-post-button">Редактировать</a>
+				<a href="{% url 'del_post' post.id %}" class="delete-post-button">Удалить</a>
+			{% endif %}
+		</div>
+		<div class="edit-post"></div>
+	{% endfor %}
+</div>
+
+{% if user.is_authenticated %}
+	{% include 'topic/add-post.html' %}
+{% endif %}
+
+<script>
+$('.edit-post-button').on('click', function(e){
+	e.preventDefault();
+    $.get($(this).attr('href'), function(data) {
+		$(".edit-post").html(data);
+    });
+});
+</script>
+{% endblock %}
