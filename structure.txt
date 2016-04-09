@@ -4,22 +4,21 @@ Start date: 1 april 2016y
 	Имя - √
 	Фамилия - √
 	Дата регистрации - √
-	Онлайн
+	Онлайн - √
 	Почта - √
 	Аватар - √
-	Язык программирования - √
 	Голосов - √
 	Модератор - √
 
 
-Язык программирования - √
+Категория - √
 	название - √
 	описание - √
 	ярлык - √
 
 
 Подкатегория - √
-	Язык программирования - √
+	категория - √
 	Название - √
 	Ярлык - √
 
@@ -64,32 +63,3 @@ Start date: 1 april 2016y
 Вопросы
 	опрос
 	вопрос
-
-
-End 20 april 2016y
-
-
-
-Система почты
-	Моедль
-		Отправленые_сообщения
-			от кого
-			кому
-			тема
-			текст
-			дата
-			удалить_юзер
-			удалить_получатель
-
-
-	Отправленые
-		TopicMessage.objects.filter(id=id, user=request.user, delete=False) - √
-
-
-
-
-	Входящие
-		context['inboxs'] = TopicMessage.objects.filter(recipient=context['profile'], delete_recipient=False) - √
-
-	Удаленые
-		TopicMessage.objects.filter(id=id, user=user, delete=False) | TopicMessage.objects.filter(id=id, user=recipient, delete_recipient=False)
