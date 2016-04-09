@@ -31,10 +31,16 @@ Start date: 1 april 2016y
 	Текст - √
 	Теги - √
 	Дата создания - √
-	Жалоба модератору - √
+	Жалоба модератору - √ (теперь как отдельная модель)
 	Публикация - √
 	Колличество постов - √
 
+Жалоба модератору
+	топик - √
+	юзер - √
+	текст - √
+	дата создания - √
+	проверил тему модератор = Flase - √
 
 Сообщения к постам
 	Пост - √
@@ -51,14 +57,39 @@ Start date: 1 april 2016y
 	Плохой - √
 	Дата - √
 
+Опросы
+	юзер
+	заголовок
 
-ЛС:
-	Юзер отправитель - √
-	Юзер топика(брать с топика) - √
-	Топик - √
-	Сообщение - √
-	Дата создания - √
-
+Вопросы
+	опрос
+	вопрос
 
 
 End 20 april 2016y
+
+
+
+Система почты
+	Моедль
+		Отправленые_сообщения
+			от кого
+			кому
+			тема
+			текст
+			дата
+			удалить_юзер
+			удалить_получатель
+
+
+	Отправленые
+		TopicMessage.objects.filter(id=id, user=request.user, delete=False) - √
+
+
+
+
+	Входящие
+		context['inboxs'] = TopicMessage.objects.filter(recipient=context['profile'], delete_recipient=False) - √
+
+	Удаленые
+		TopicMessage.objects.filter(id=id, user=user, delete=False) | TopicMessage.objects.filter(id=id, user=recipient, delete_recipient=False)

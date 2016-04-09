@@ -4,7 +4,7 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import user_passes_test
 
 from ..accounts.models import User
-from ..blog.models import ProgrammingLang, Subcategory, Topic, Post
+from ..blog.models import ProgrammingLang, Subcategory, Topic, Post, Moderated
 
 
 @user_passes_test(lambda u: u.is_superuser)
@@ -44,6 +44,7 @@ def topics(request):
 	context = {}
 	context[''] = u'Все топики'
 	context['topics'] = Topic.objects.all().order_by('created_at')
+	context['moderateds'] = Moderated.objects.filter(moderated=False).order_by('-topic__id')
 	return render(request, 'panel/topics.html', context)
 
 

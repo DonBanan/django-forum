@@ -6,3 +6,8 @@
 	<p>{{ topic.posts.count }}</p>
 	<p>{{ topic.created_at|naturaltime }}</p>
 {% endfor %}
+++++++
+{% for moderated in moderateds %}
+	{{ moderated.topic.id }}
+	{{ moderated.topic.title }}
+{% endfor %}

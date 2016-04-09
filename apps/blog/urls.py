@@ -10,6 +10,9 @@ urlpatterns = [
 	url(r'^delete-topic/(?P<id>\d+)/$', views.del_topic, name='del_topic'),
 
 
+	url(r'^moderated-topic/(?P<id>\d+)/$', views.moderated, name='moderated'),
+
+
 	url(r'^add-post/(?P<id>\d+)/$', views.add_post, name='add_post'),
 	url(r'^edit-post/(?P<id>\d+)/$', views.edit_post, name='edit_post'),
 	url(r'^del-post/(?P<id>\d+)/$', views.del_post, name='del_post'),
@@ -22,6 +25,7 @@ urlpatterns = [
 	url(r'^personal-message/(?P<id>\d+)/$', views.personal_message, name='personal_message'),
 	url(r'^send-message/(?P<id>\d+)/$', views.send_message, name='send_message'),
 	url(r'^delete-message/(?P<id>\d+)/$', views.del_message, name='del_message'),
+	url(r'^del-recipient-message/(?P<id>\d+)/$', views.del_recipient_message, name='del_recipient_message'),
 
 
 	url(r'^all-language/$', views.all_language, name='all_language'),

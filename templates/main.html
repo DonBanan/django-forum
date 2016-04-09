@@ -4,11 +4,6 @@
 {% block content %}
 	<div class="jumbotron no-margin-bottom no-padding-bottom">
 		<div class="container text-center">
-			<div id="site-logo">
-				<a href="/">
-					<img src="templates/img/my-logo.png" width="100" height="76" alt="" title="" class="img-responsive center-block">
-				</a>
-			</div>
 			<p>Форум для программистов, дизайнеров и сисадминов</p>
 		</div>
 	</div>
@@ -31,8 +26,8 @@
 						</span>
 							<a href="{% url 'subcategory' sub.programming_language.slug sub.slug %}" class="forumtitle">{{ sub.title }}</a><br>
 					</td>
-					<td class="topics text-center"><span class="badge">{{ sub.topics_subcategory.count }}</span></td>
-					<td class="posts text-center"><span class="badge">{{ sub.posts_count.topic_count.count }}</span></td>
+					<td class="topics text-center"><span class="badge">{{ sub.posts_count }}</span></td>
+					<td class="posts text-center"><span class="badge">{{ sub.posts_count }}</span></td>
 					<td class="lastpost">
 						{% for topic in sub.topics_subcategory.all|slice:":1" %}
 							<span><dfn>Последний ответ</dfn> от <a href="">{{ topic.last_post.post.user }}</a>

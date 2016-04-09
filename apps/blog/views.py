@@ -5,9 +5,9 @@ from django.http import HttpResponse
 
 from django.contrib.auth.decorators import login_required
 
-from .models import ProgrammingLang, Subcategory, Topic, Post, Vote, PersonalMessage
+from .models import ProgrammingLang, Subcategory, Topic, Post, Vote, TopicMessage
 
-from .forms import TopicForm, PostForm, PersonalMessageForm
+from .forms import TopicForm, PostForm, PersonalMessageForm, ModeratedForm
 
 
 def all_language(request):
@@ -28,13 +28,14 @@ def subcategory(request, language_slug, subcategory_slug):
 	context = {}
 	context['title'] = Subcategory.objects.get(slug=subcategory_slug)
 	context['subcategory'] = Subcategory.objects.get(programming_language__slug=language_slug, slug=subcategory_slug)
+	context['topics'] = Topic.objects.filter(subcategory=context['subcategory'], public=True)
 	return render(request, 'blog/subcategory.html', context)
 
 
 def topic(request, subcategory_slug, id):
 	context = {}
 	context['title'] = u'Все топики'
-	context['topic'] = Topic.objects.get(subcategory__slug=subcategory_slug, id=id)
+	context['topic'] = Topic.objects.get(subcategory__slug=subcategory_slug, id=id, public=True)
 	context['topic'].count_views += 1
 	context['good_vote'] = Vote.objects.filter(topic=context['topic'], good_vote=True).count()
 	context['bad_vote'] = Vote.objects.filter(topic=context['topic'], bad_vote=True).count()
@@ -81,9 +82,26 @@ def del_topic(request, id):
 
 
 @login_required
+def moderated(request, id):
+	context = {}
+	topic = Topic.objects.get(id=id, public=True)
+	form = ModeratedForm(request.POST or None, request.FILES or None)
+	if form.is_valid():
+		new_mod = form.save(commit=False)
+		new_mod.topic = topic
+		new_mod.user = request.user
+		topic.moderated = True
+		topic.public = False
+		topic.save()
+		new_mod.save()
+	context['form'] = form
+	return render(request, 'topic/moderated.html', context)
+
+
+@login_required
 def add_post(request, id):
 	context = {}
-	topic = Topic.objects.get(id=id)
+	topic = Topic.objects.get(id=id, public=True)
 	context['post_form'] = PostForm(request.POST or None)
 	if context['post_form'].is_valid():
 		new_post = context['post_form'].save(commit=False)
@@ -116,7 +134,7 @@ def del_post(request, id):
 @login_required
 def good_vote(request, id):
 	context = {}
-	topic = Topic.objects.get(id=id)
+	topic = Topic.objects.get(id=id, public=True)
 	user_vote = Vote.objects.filter(user=request.user.id, topic=topic)
 	if not user_vote:
 		vote = Vote.objects.create(user=request.user, topic=topic)
@@ -131,7 +149,7 @@ def good_vote(request, id):
 @login_required
 def bad_vote(request, id):
 	context = {}
-	topic = Topic.objects.get(id=id)
+	topic = Topic.objects.get(id=id, public=True)
 	user_vote = Vote.objects.filter(user=request.user.id, topic=topic)
 	if not user_vote:
 		vote = Vote.objects.create(user=request.user, topic=topic)
@@ -147,12 +165,13 @@ def bad_vote(request, id):
 def personal_message(request, id):
 	context = {}
 	context['title'] = u'Личное сообщение'
-	context['topic'] = Topic.objects.get(id=id)
-	context['personal_form'] = PersonalMessageForm(request.POST or None)
+	context['topic'] = Topic.objects.get(id=id, public=True)
+	context['personal_form'] = PersonalMessageForm(request.POST or None, request.FILES or None)
 	if context['personal_form'].is_valid():
 		personal_message = context['personal_form'].save(commit=False)
 		personal_message.user = request.user
 		personal_message.recipient = context['topic'].user
+		personal_message.theme = context['topic'].title
 		personal_message.topic = context['topic']
 		personal_message.save()
 	return render(request, 'topic/personal_message.html', context)
@@ -162,18 +181,29 @@ def personal_message(request, id):
 def send_message(request, id):
 	context = {}
 	context['title'] = u'Личное сообщение'
-	instance = PersonalMessage.objects.get(id=id)
+	instance = TopicMessage.objects.get(id=id)
 	context['personal_form'] = PersonalMessageForm(request.POST or None)
 	if context['personal_form'].is_valid():
 		personal_message = context['personal_form'].save(commit=False)
 		personal_message.user = request.user
 		personal_message.recipient = instance.user
 		personal_message.parent = instance
+		personal_message.theme = instance.theme
 		personal_message.save()
 	return render(request, 'topic/personal_message.html', context)
 
 
 @login_required
 def del_message(request, id):
-	PersonalMessage.objects.get(user=request.user, id=id).delete()
+	message = TopicMessage.objects.get(user=request.user, id=id)
+	message.delete = True
+	message.save()
+	return HttpResponse('ok')
+
+
+@login_required
+def del_recipient_message(request, id):
+	message = TopicMessage.objects.get(recipient=request.user, id=id)
+	message.delete_recipient = True
+	message.save()
 	return HttpResponse('ok')

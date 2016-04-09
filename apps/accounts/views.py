@@ -13,7 +13,7 @@ from .forms import SingUpForm, ProfileForm
 
 from .models import User
 
-from apps.blog.models import Topic, Post, PersonalMessage
+from apps.blog.models import Topic, Post, TopicMessage
 
 
 @csrf_exempt
@@ -35,8 +35,12 @@ def profile(request, id):
 	context['title'] = u'Профиль %s' % (User.objects.get(id=id))
 	context['profile'] = User.objects.get(id=id)
 	context['topics'] = Topic.objects.filter(user=context['profile'])
-	context['posts'] = Post.objects.filter(user=context['profile'])
-	context['messages'] = PersonalMessage.objects.filter(user=context['profile'])
+	context['posts'] = Post.objects.filter(user=context['profile'], topic__public=True)
+	context['messages'] = TopicMessage.objects.filter(user=context['profile'])
+	context['sent_messages'] = TopicMessage.objects.filter(user=context['profile'], delete=False)
+	context['inboxs'] = TopicMessage.objects.filter(recipient=context['profile'], delete_recipient=False)
+	context['trash'] = TopicMessage.objects.filter(user=context['profile'], delete=True) | TopicMessage.objects.filter(recipient=context['profile'], delete_recipient=True)
+	print context['trash']
 	return render(request, 'accounts/profile.html', context)
 
 

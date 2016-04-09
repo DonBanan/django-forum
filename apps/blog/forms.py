@@ -2,7 +2,7 @@ from django import forms
 
 from ..accounts.models import User
 
-from .models import Topic, Post, PersonalMessage
+from .models import Topic, Post, TopicMessage, Moderated
 
 
 class TopicForm(forms.ModelForm):
@@ -17,7 +17,12 @@ class PostForm(forms.ModelForm):
 		fields = ['message']
 
 
+class ModeratedForm(forms.ModelForm):
+	class Meta:
+		model = Moderated
+		fields = ['text']
+
 class PersonalMessageForm(forms.ModelForm):
 	class Meta:
-		model = PersonalMessage
+		model = TopicMessage
 		fields = ['message']

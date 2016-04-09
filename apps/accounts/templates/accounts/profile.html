@@ -4,32 +4,27 @@
 
 {% block content %}
 
-{% with request.user.get_profile as profile %}
+	<h1>Профиль {{ profile }}
+		{% if profile.online %}
+			<span class="online">Online</span>
+		{% else %}
+			<span class="offline">Offline</span>
+		{% endif %}
+	</h1>
 
- <table>
-   <tr><th>Last Seen</th><td>{% if profile.last_seen %}{{ profile.last_seen|timesince }}{% else %}awhile{% endif %} ago</td></tr>
-   <tr><th>Online</th><td>{{ profile.online }}</td></tr>
- </table>
-
-{% endwith %}
-
-	<h1>Профиль {{ profile }}</h1>
-	<p>{{ profile.first_name }}</p>
-	<p>{{ profile.last_name }}</p>
-	<p>{{ profile.email }}</p>
-	{% for lang in profile.user_languages.all %}
-		<p>{{ lang.title }}</p>
-	{% endfor %}
 	{% if user.avatar %}
 		{% thumbnail profile.avatar "300x300" crop="center" as im %}
 			<img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
 		{% endthumbnail %}
 	{% endif %}
+
+	<p>Имя: {{ profile.first_name }}</p>
+	<p>Фамилия: {{ profile.last_name }}</p>
+	<p>E-mail: {{ profile.email }}</p>
+
 	{% if profile == user %}
-	<ul>
-		<li><a href="">Сменить пароль</a></li>
-		<li><a href="{% url 'edit_profile' user.id %}">Редактировать профиль</a></li>
-	</ul>
+		<a href="">Сменить пароль</a>
+		<a href="{% url 'edit_profile' user.id %}">Редактировать профиль</a>
 	{% endif %}
 
 	{% if profile == user %}
@@ -39,9 +34,14 @@
 	{% endif %}
 	<div>
 		{% for topic in topics %}
-			<a href="{% url 'topic' topic.subcategory.slug topic.id %}">{{ topic.title }}</a>
-			<p>{{ topic.posts.count }}</p>
-			<p>{{ topic.created_at|naturaltime }}</p>
+			{% if topic.moderated %}
+				<p>Жалоба модератору, на тему {{ topic.title }}</p>
+			{% else %}
+				Тема: <a href="{% url 'topic' topic.subcategory.slug topic.id %}">{{ topic.title }}</a>
+			{% endif %}
+			<p>Ответов: {{ topic.posts.count }}</p>
+			<p>Просмотров: {{ topic.count_views }}</p>
+			<p>Дата создания: {{ topic.created_at|naturaltime }}</p>
 		{% endfor %}
 	</div>
 
@@ -57,33 +57,61 @@
 		{% endfor %}
 	</div>
 
-	{% if profile == user %}
-		<h1>Входящие сообщения</h1>
-		<div>
-		{% for msg in profile.recipient.all %}
-		{{ msg.user }}
-		<p>{{ msg.id }}</p>
-		<p>{{ msg.message }}</p>
-		<p>{{ msg.created_at|naturaltime }}</p>
-		<a href="{% url 'send_message' msg.id %}">Ответить</a>
-		<a href="{% url 'del_message' msg.id %}">Удалить</a>
-		{% endfor %}
-	</div>
-	{% endif %}
+
+
+
+
+
+
+
+
 
 	{% if profile == user %}
 		<h1>Отправленные сообщения</h1>
 		<div>
-		{% for msg in profile.personalmessage_user.all %}
-		<p>{{ msg.id }}</p>
-		<p>{{ msg.message }}</p>
-		<p>{{ msg.created_at|naturaltime }}</p>
-		<a href="{% url 'del_message' msg.id %}">Удалить</a>
-		{% endfor %}
-	</div>
+			{% for msg in sent_messages %}
+			<p>Тема: {{ msg.theme }}</p>
+			<p>Сообщение: {{ msg.message }}</p>
+			<p>Дата: {{ msg.created_at|naturaltime }}</p>
+			<a href="{% url 'del_message' msg.id %}">Удалить</a>
+			{% endfor %}
+		</div>
 	{% endif %}
+
+
+
+
+
+
+
+	{% if profile == user %}
+		<h1>Входящие сообщения</h1>
+		<div>
+			{% for msg in inboxs %}
+				<p>Тема: {{ msg.theme }}</p>
+				<p>Сообщение: {{ msg.message }}</p>
+				<p>Дата: {{ msg.created_at|naturaltime }}</p>
+				<a href="{% url 'send_message' msg.id %}">Ответить</a>
+				<a href="{% url 'del_recipient_message' msg.id %}">Удалить</a>
+			{% endfor %}
+		</div>
+	{% endif %}
+
+
+
+
+
+
+
 
 	{% if profile == user %}
 		<h1>Корзина</h1>
+		<div>
+			{% for msg in trash %}
+				<p>Тема: {{ msg.theme }}</p>
+				<p>Сообщение: {{ msg.message }}</p>
+				<p>Дата: {{ msg.created_at|naturaltime }}</p>
+			{% endfor %}
+		</div>
 	{% endif %}
 {% endblock %}
