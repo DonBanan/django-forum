@@ -5,13 +5,13 @@ from django.shortcuts import render
 
 from django.http import HttpResponse
 
-from ..blog.models import ProgrammingLang, Subcategory, Topic, Post
+from ..blog.models import Category, Subcategory, Topic, Post
 
 
 def languages_api(request):
 	context = {}
 	languages = []
-	for language in ProgrammingLang.objects.all():
+	for language in Category.objects.all():
 		language_dict = {
 			"id": language.id,
 			"title": u'%s' % language.title,

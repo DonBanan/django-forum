@@ -3,9 +3,8 @@
 	{{ post_form.errors }}
 	<div>
 		{% for field in post_form %}
-			<label>{{ field.label }}</label>
 			{{ field }}
 		{% endfor %}
-		<input type="submit">
+		<button type="submit" class="btn-add-topic"><i class="fa fa-commenting"></i> Оставить коментарий</button>
 	</div>
 </form>

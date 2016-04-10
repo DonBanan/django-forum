@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import ProgrammingLang, Subcategory, Post, Vote, TopicMessage, Moderated
+from .models import Category, Subcategory, Post, Vote, TopicMessage, Moderated
 
 
 class SubcategoryInline(admin.StackedInline):
@@ -8,10 +8,10 @@ class SubcategoryInline(admin.StackedInline):
 	extra = 0
 
 
-class ProgrammingLangAdmin(admin.ModelAdmin):
+class CategoryAdmin(admin.ModelAdmin):
 	list_display = ['title', 'slug']
 	inlines = [SubcategoryInline,]
-admin.site.register(ProgrammingLang, ProgrammingLangAdmin)
+admin.site.register(Category, CategoryAdmin)
 
 
 admin.site.register(Post)

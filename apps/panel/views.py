@@ -4,7 +4,7 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import user_passes_test
 
 from ..accounts.models import User
-from ..blog.models import ProgrammingLang, Subcategory, Topic, Post, Moderated
+from ..blog.models import Category, Subcategory, Topic, Post, Moderated
 
 
 @user_passes_test(lambda u: u.is_superuser)
@@ -26,7 +26,7 @@ def users(request):
 def languages(request):
 	context = {}
 	context['title'] = u'Все языки'
-	context['users'] = ProgrammingLang.objects.all()
+	context['users'] = Category.objects.all()
 	return render(request, 'panel/languages.html', context)
 
 
@@ -34,7 +34,7 @@ def languages(request):
 def subcategory(request, slug, id):
 	context = {}
 	context['title'] = u'Все языки'
-	context['users'] = ProgrammingLang.objects.get(slug=slug)
+	context['users'] = Category.objects.get(slug=slug)
 	context['users'] = Subcategory.objects.get(id=id)
 	return render(request, 'panel/languages.html', context)
 

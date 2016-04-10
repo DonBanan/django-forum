@@ -1,9 +1,9 @@
-from .models import ProgrammingLang, Topic, Post
+from .models import Category, Topic, Post
 
 
 def categories(request):
 	context = {}
-	context['categories'] = ProgrammingLang.objects.all()
+	context['categories'] = Category.objects.all()
 	return context
 
 

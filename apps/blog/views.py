@@ -5,7 +5,7 @@ from django.http import HttpResponse
 
 from django.contrib.auth.decorators import login_required
 
-from .models import ProgrammingLang, Subcategory, Topic, Post, Vote, TopicMessage
+from .models import Category, Subcategory, Topic, Post, Vote, TopicMessage
 
 from .forms import TopicForm, PostForm, PersonalMessageForm, ModeratedForm
 
@@ -13,14 +13,14 @@ from .forms import TopicForm, PostForm, PersonalMessageForm, ModeratedForm
 def all_language(request):
 	context = {}
 	context['title'] = u'Все языки'
-	context['languages'] = ProgrammingLang.objects.all()
+	context['languages'] = Category.objects.all()
 	return render(request, 'blog/languages.html', context)
 
 
 def language(request, slug):
 	context = {}
-	context['title'] = ProgrammingLang.objects.get(slug=slug)
-	context['language'] = ProgrammingLang.objects.get(slug=slug)
+	context['title'] = Category.objects.get(slug=slug)
+	context['language'] = Category.objects.get(slug=slug)
 	return render(request, 'blog/language.html', context)
 
 
@@ -35,13 +35,15 @@ def subcategory(request, language_slug, subcategory_slug):
 def topic(request, subcategory_slug, id):
 	context = {}
 	context['title'] = u'Все топики'
-	context['topic'] = Topic.objects.get(subcategory__slug=subcategory_slug, id=id, public=True)
-	context['topic'].count_views += 1
-	context['good_vote'] = Vote.objects.filter(topic=context['topic'], good_vote=True).count()
-	context['bad_vote'] = Vote.objects.filter(topic=context['topic'], bad_vote=True).count()
+	topic = Topic.objects.get(subcategory__slug=subcategory_slug, id=id, public=True)
+	context['posts'] = Post.objects.filter(topic=topic).order_by('-created_at')
+	topic.count_views += 1
+	context['good_vote'] = Vote.objects.filter(topic=topic, good_vote=True).count()
+	context['bad_vote'] = Vote.objects.filter(topic=topic, bad_vote=True).count()
 	context['post_form'] = PostForm()
-	context['count_view'] = Topic.objects.filter(pk=context['topic'].id).update(count_views=F('count_views') + 1)
-	context['topic'].save()
+	context['count_view'] = Topic.objects.filter(id=topic.id).update(count_views=F('count_views') + 1)
+	topic.save()
+	context['topic'] = topic
 	return render(request, 'topic/topic.html', context)
 
 

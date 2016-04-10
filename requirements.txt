@@ -1,3 +1,7 @@
 Django
 Pillow
+lettuce
 sorl-thumbnail
+lxml
+nose
+lettuce_webdriver

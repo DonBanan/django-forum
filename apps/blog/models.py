@@ -6,7 +6,7 @@ from django.db import models
 from ..accounts.models import User
 
 
-class ProgrammingLang(models.Model):
+class Category(models.Model):
 	title = models.CharField(verbose_name=u'Название', max_length=256)
 	short_description = models.TextField(verbose_name=u'Описание')
 	slug = models.SlugField(verbose_name=u'Ярлык')
@@ -24,7 +24,7 @@ class ProgrammingLang(models.Model):
 
 
 class Subcategory(models.Model):
-	programming_language = models.ForeignKey(ProgrammingLang, verbose_name=u'Язык', related_name='subcategories')
+	programming_language = models.ForeignKey(Category, verbose_name=u'Язык', related_name='subcategories')
 	title = models.CharField(verbose_name=u'Название', max_length=256)
 	slug = models.SlugField(verbose_name=u'Ярлык')
 
