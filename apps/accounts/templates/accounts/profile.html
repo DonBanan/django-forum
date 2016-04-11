@@ -27,6 +27,9 @@
 		<a href="{% url 'edit_profile' user.id %}">Редактировать профиль</a>
 	{% endif %}
 
+
+	<hr>
+
 	{% if profile == user %}
 		<h1>Мои топики</h1>
 	{% else %}
@@ -35,16 +38,20 @@
 	<div>
 		{% for topic in topics %}
 			{% if topic.moderated %}
-				<p>Жалоба модератору, на тему {{ topic.title }}</p>
+				<div class="alert alert-danger" role="alert">Жалоба модератору, на тему {{ topic.title }}</div>
 			{% else %}
 				Тема: <a href="{% url 'topic' topic.subcategory.slug topic.id %}">{{ topic.title }}</a>
+				<p>Ответов: {{ topic.posts.count }}</p>
+				<p>Просмотров: {{ topic.count_views }}</p>
+				<p>Дата создания: {{ topic.created_at|naturaltime }}</p>
 			{% endif %}
-			<p>Ответов: {{ topic.posts.count }}</p>
-			<p>Просмотров: {{ topic.count_views }}</p>
-			<p>Дата создания: {{ topic.created_at|naturaltime }}</p>
 		{% endfor %}
 	</div>
 
+<hr>
+
+
+	{% if posts %}
 	{% if profile == user %}
 		<h1>Мои посты</h1>
 	{% else %}
@@ -56,8 +63,8 @@
 			<p>{{ post.created_at|naturaltime }}</p>
 		{% endfor %}
 	</div>
-
-
+	<hr>
+	{% endif %}
 
 
 

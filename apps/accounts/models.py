@@ -12,6 +12,8 @@ class User(AbstractUser):
 	is_moderator = models.BooleanField(verbose_name=u'Модератор', default=False)
 	rank = models.CharField(verbose_name=u'Звание', max_length=256, blank=True, null=True)
 
+	mail_name = models.CharField(verbose_name=u'Имя почты', max_length=500, blank=True, null=True)
+
 	def last_seen(self):
 		return cache.get('seen_%s' % self.username)
 

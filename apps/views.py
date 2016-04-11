@@ -2,8 +2,12 @@
 import datetime
 from django.shortcuts import render
 
+from django.db.models import Q
+from django.db.models import Count
 from apps.accounts.models import User
 from apps.blog.models import Category
+from apps.blog.models import Subcategory
+from apps.blog.models import Topic
 
 
 def home(request):
@@ -13,3 +17,26 @@ def home(request):
 	context['languages'] = Category.objects.all()
 	context['users'] = User.objects.all()
 	return render(request, 'main.html', context)
+
+
+def search(request):
+	context = {}
+	context['title'] = u'Поиск'
+	topics = Topic.objects.all()
+	if 'title' in request.GET and request.GET['title']:
+		title = request.GET.get('title', '')
+		topics = topics.filter(Q(title__icontains=title))
+		category_group = topics.values('subcategory').annotate(count=Count('subcategory'))
+		categories = []
+		for item in category_group:
+			categories.append(
+				{
+					'category': Subcategory.objects.filter(id=item['subcategory']).first(),
+					'count': item['count'],
+				}
+			)
+		context['categories'] = categories
+
+	context['topics'] = topics
+
+	return render(request, 'search.html', locals())

@@ -15,6 +15,9 @@ urlpatterns = patterns('',
 	# Admin
 	url(r'^admin/', include(admin.site.urls)),
 
+	#Search
+	url(r'^search/$', 'apps.views.search', name='search'),
+
 	# Panel
 	url(r'^', include('apps.panel.urls')),
 

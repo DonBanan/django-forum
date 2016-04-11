@@ -19,8 +19,8 @@ class Category(models.Model):
 		return ('language', (), {'slug': self.slug})
 
 	class Meta:
-		verbose_name=u'Язык программирования'
-		verbose_name_plural=u'Языки программирования'
+		verbose_name=u'Категория'
+		verbose_name_plural=u'Категории'
 
 
 class Subcategory(models.Model):
@@ -76,8 +76,8 @@ class Topic(models.Model):
 
 	def last_post(self):
 		posts = {}
-		sub_objects = self.posts.filter(topic=self).order_by('-created_at')[:1]
-		for post in sub_objects:
+		post_object = self.posts.filter(topic=self).order_by('-created_at').first()
+		for post in post_object:
 			posts['post'] = {
 				'user': post.user,
 				'avatar': post.user.avatar,

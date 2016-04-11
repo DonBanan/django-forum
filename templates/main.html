@@ -2,9 +2,17 @@
 {% load thumbnail %}
 {% load humanize %}
 {% block content %}
-	<div class="jumbotron no-margin-bottom no-padding-bottom">
+	<div class="jumbotron no-margin-bottom no-padding-bottom banner">
 		<div class="container text-center">
-			<p>Форум для программистов, дизайнеров и сисадминов</p>
+			<h2>Форум для программистов, дизайнеров и сисадминов</h2>
+			<form action="{% url 'search' %}" method="get" class="input-group col-md-6 col-md-offset-3">
+				<input type="text" class="search-query form-control" name="title" placeholder="Поиск" />
+				<span class="input-group-btn">
+					<button class="btn btn-success" type="submit">
+						<span class=" glyphicon glyphicon-search"></span>
+					</button>
+				</span>
+			</form>
 		</div>
 	</div>
 	{% for language in languages %}
@@ -30,6 +38,7 @@
 					<td class="posts text-center"><span class="badge">{{ sub.posts_count }}</span></td>
 					<td class="lastpost">
 						{% for topic in sub.topics_subcategory.all|slice:":1" %}
+						{{ topic.title }}
 							<span><dfn>Последний ответ</dfn> от <a href="">{{ topic.last_post.post.user }}</a>
 						{% if topic.user.avatar %}
 							{% thumbnail topic.user.avatar "20x20" crop="center" as im %}
@@ -68,6 +77,7 @@
 			<h3 class="panel-title"><i class="fa fa-area-chart"></i> Статистика</h3>
 		</div>
 		<div class="panel-body">
+			<h4>За все время:</h4>
 			<p>Всего топиков <strong>{{ topics }}</strong> • Всего ответов <strong>{{ posts }}</strong> • Всего юзеров <strong>{{ users.count }}</strong></p>
 			<hr>
 			<p class="right">Сегодня {{ now|date:'d (l) F Y' }}  время: {{ now|date:'H:i' }}</p>
