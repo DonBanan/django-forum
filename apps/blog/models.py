@@ -36,12 +36,19 @@ class Subcategory(models.Model):
 
 	def topic_posts_count(self):
 		posts = {}
+		topics = self.topics_subcategory.values('posts').annotate(dcount=Count('posts'))
+		return topics.count()
+
+	def topic_last_post(self):
+		posts = {}
 		topics = self.topics_subcategory.all()
 		for topic in topics:
-			post = Post.objects.filter(topic=topic)
-			posts['post'] = {
-				'count': post.count()
-			}
+			post = Post.objects.filter(topic=topic).order_by('-created_at')
+			for post_item in post:
+				posts['post_item'] = {
+					'user': post_item.user,
+					'created_at': post_item.created_at,
+				}
 		return posts
 
 	class Meta:
@@ -94,6 +101,9 @@ class Post(models.Model):
 	message = models.TextField(verbose_name=u'Пост')
 	created_at = models.DateTimeField(verbose_name=u'Дата создания', auto_now_add=True)
 	public = models.BooleanField(verbose_name=u'Публикация', default=False)
+
+	def __unicode__(self):
+		return self.message
 
 
 class Vote(models.Model):

@@ -35,17 +35,16 @@
 							<a href="{% url 'subcategory' sub.programming_language.slug sub.slug %}" class="forumtitle">{{ sub.title }}</a><br>
 					</td>
 					<td class="topics text-center"><span class="badge">{{ sub.topic_count }}</span></td>
-					<td class="posts text-center"><span class="badge">{{ sub.topic_posts_count.post.count }}</span></td>
+					<td class="posts text-center"><span class="badge">{{ sub.topic_posts_count }}</span></td>
 					<td class="lastpost">
-<!-- 						{% for topic in sub.topics_subcategory.all %}
-								<span><dfn>Последний ответ</dfn> от <a href="">{{ topic.last_post.post.user }}</a>
+								<span><dfn>Последний ответ</dfn> от <a href="">{{ sub.topic_last_post.post_item.user }}</a>
 							{% if topic.user.avatar %}
 								{% thumbnail topic.user.avatar "20x20" crop="center" as im %}
 									<img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
 								{% endthumbnail %}
 							{% endif %}
-							<br>{{ topic.last_post.post.created_at|naturaltime }}</span>
-						{% endfor %} -->
+							<br>{{ sub.topic_last_post.post_item.created_at|naturaltime }}
+							</span>
 					</td>
 				</tr>
 			{% endfor %}
