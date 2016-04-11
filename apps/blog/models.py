@@ -31,17 +31,17 @@ class Subcategory(models.Model):
 	def __unicode__(self):
 		return self.title
 
-	# def posts_count(self):
-	# 	posts = {}
-	# 	topics = self.topics_subcategory.all()
-	# 	for topic in topics:
-	# 		post = topic.posts.all().count()
-	# 		posts['post'] = {
-	# 			'count': post
-	# 		}
+	def topic_count(self):
+		return self.topics_subcategory.count()
 
-	def posts_count(self):
-		posts = self.topics_subcategory.filter(public=True).annotate(post_count=Count('posts')).count()
+	def topic_posts_count(self):
+		posts = {}
+		topics = self.topics_subcategory.all()
+		for topic in topics:
+			post = Post.objects.filter(topic=topic)
+			posts['post'] = {
+				'count': post.count()
+			}
 		return posts
 
 	class Meta:
@@ -74,16 +74,6 @@ class Topic(models.Model):
 		posts_with_counts = self.topics_subcategory.filter(public=True).annotate(issue_count=Count('posts'))
 		return posts_with_counts
 
-	def last_post(self):
-		posts = {}
-		post_object = self.posts.filter(topic=self).order_by('-created_at').first()
-		for post in post_object:
-			posts['post'] = {
-				'user': post.user,
-				'avatar': post.user.avatar,
-				'created_at': post.created_at
-			}
-		return posts
 
 	class Meta:
 		verbose_name=u'Топик'
