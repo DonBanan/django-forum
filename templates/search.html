@@ -1,8 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
-	<div class="alert alert-info">Найдено: <strong>{{ topics.count }}</strong> тем в следующих подкатегориях: </div>
-	{% for category in categories %}
-		{{ category.category }}
-		{{ category.count }}
+	<div class="alert alert-info">Найдено: <strong>{{ topics.count }}</strong>: </div>
+	{% for topic in topics %}
+		<a href="{% url 'topic' topic.subcategory.slug topic.id %}">{{ topic.title }}</a>
 	{% endfor %}
 {% endblock %}

@@ -12,7 +12,13 @@
 		{% endif %}
 	</h1>
 
-	{% if user.avatar %}
+
+	{% if profile.is_superuser or profile.is_moderator %}
+		<h1>Суперюзер</h1>
+	{% endif %}
+
+
+	{% if profile.avatar %}
 		{% thumbnail profile.avatar "300x300" crop="center" as im %}
 			<img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
 		{% endthumbnail %}

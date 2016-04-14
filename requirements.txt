@@ -5,3 +5,4 @@ sorl-thumbnail
 lxml
 nose
 lettuce_webdriver
+django-markdown

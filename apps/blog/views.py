@@ -24,10 +24,10 @@ def language(request, slug):
 	return render(request, 'blog/language.html', context)
 
 
-def subcategory(request, language_slug, subcategory_slug):
+def subcategory(request, category_slug, subcategory_slug):
 	context = {}
 	context['title'] = Subcategory.objects.get(slug=subcategory_slug)
-	context['subcategory'] = Subcategory.objects.get(programming_language__slug=language_slug, slug=subcategory_slug)
+	context['subcategory'] = Subcategory.objects.get(category__slug=category_slug, slug=subcategory_slug)
 	context['topics'] = Topic.objects.filter(subcategory=context['subcategory'], public=True)
 	return render(request, 'blog/subcategory.html', context)
 

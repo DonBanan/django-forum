@@ -1,0 +1,23 @@
+<!-- Bootstrap Core CSS -->
+<link href="/templates/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- Custom CSS -->
+<link href="/templates/css/simple-sidebar.css" rel="stylesheet">
+
+<!-- Sidebar -->
+<div id="sidebar-wrapper">
+	<ul class="sidebar-nav">
+		<li class="sidebar-brand"><a href="/panel/">Панель управления</a></li>
+		<li><a href="{% url 'users' %}"> Все юзеры</a></li>
+		<li><a href="{% url 'categories' %}"> Все категории</a></li>
+		<li><a href="{% url 'users' %}"> Все Рубрики</a></li>
+		<li><a href="{% url 'topics' %}"> Все топики</a></li>
+		<li><a href="{% url 'posts' %}"> Все посты</a></li>
+		<li class="sidebar-brand"><a href="/panel/">API</a></li>
+		<li><a href="{% url 'languages_api' %}"> Все юзеры</a></li>
+		<li><a href="{% url 'subcategories_api' %}"> Все Языки</a></li>
+		<li><a href="{% url 'topics_api' %}"> Все Рубрики</a></li>
+		<li><a href="{% url 'topics_api' %}"> Все топики</a></li>
+	</ul>
+</div>
+<!-- /#sidebar-wrapper -->

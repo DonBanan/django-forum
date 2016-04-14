@@ -6,6 +6,8 @@ from django.contrib.auth.decorators import user_passes_test
 from ..accounts.models import User
 from ..blog.models import Category, Subcategory, Topic, Post, Moderated
 
+from .forms import AddCategoryForm, AddSubcategoryForm
+
 
 @user_passes_test(lambda u: u.is_superuser)
 def panel(request):
@@ -23,20 +25,20 @@ def users(request):
 
 
 @user_passes_test(lambda u: u.is_superuser)
-def languages(request):
+def categories(request):
 	context = {}
-	context['title'] = u'Все языки'
-	context['users'] = Category.objects.all()
-	return render(request, 'panel/languages.html', context)
+	context['title'] = u'Все категории'
+	context['categories'] = Category.objects.all()
+	return render(request, 'panel/categories.html', context)
 
 
 @user_passes_test(lambda u: u.is_superuser)
-def subcategory(request, slug, id):
+def category(request, slug):
 	context = {}
-	context['title'] = u'Все языки'
-	context['users'] = Category.objects.get(slug=slug)
-	context['users'] = Subcategory.objects.get(id=id)
-	return render(request, 'panel/languages.html', context)
+	context['title'] = Category.objects.get(slug=slug).title
+	context['category'] = Category.objects.get(slug=slug)
+	context['subcategories'] = Subcategory.objects.filter(category=context['category'])
+	return render(request, 'panel/category.html', context)
 
 
 @user_passes_test(lambda u: u.is_superuser)

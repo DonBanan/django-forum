@@ -32,11 +32,12 @@
 						<span class="pull-left forum-icon">
 							<i class="fa fa-folder fa-fw"></i>
 						</span>
-							<a href="{% url 'subcategory' sub.programming_language.slug sub.slug %}" class="forumtitle">{{ sub.title }}</a><br>
+							<a href="{% url 'subcategory' sub.category.slug sub.slug %}" class="forumtitle">{{ sub.title }}</a><br>
 					</td>
 					<td class="topics text-center"><span class="badge">{{ sub.topic_count }}</span></td>
 					<td class="posts text-center"><span class="badge">{{ sub.topic_posts_count }}</span></td>
 					<td class="lastpost">
+							{% if sub.topic_last_post.post_item.user %}
 								<span><dfn>Последний ответ</dfn> от <a href="">{{ sub.topic_last_post.post_item.user }}</a>
 							{% if topic.user.avatar %}
 								{% thumbnail topic.user.avatar "20x20" crop="center" as im %}
@@ -45,6 +46,7 @@
 							{% endif %}
 							<br>{{ sub.topic_last_post.post_item.created_at|naturaltime }}
 							</span>
+							{% endif %}
 					</td>
 				</tr>
 			{% endfor %}

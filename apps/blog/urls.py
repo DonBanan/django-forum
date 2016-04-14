@@ -30,7 +30,7 @@ urlpatterns = [
 
 	url(r'^all-language/$', views.all_language, name='all_language'),
 	url(r'^(?P<slug>[\w-]+)/$', views.language, name='language'),
-	url(r'^(?P<language_slug>[\w-]+)/(?P<subcategory_slug>[\w-]+)/$', views.subcategory, name='subcategory'),
+	url(r'^(?P<category_slug>[\w-]+)/(?P<subcategory_slug>[\w-]+)/$', views.subcategory, name='subcategory'),
 
 
 ]

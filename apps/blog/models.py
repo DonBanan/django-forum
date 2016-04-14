@@ -24,7 +24,7 @@ class Category(models.Model):
 
 
 class Subcategory(models.Model):
-	programming_language = models.ForeignKey(Category, verbose_name=u'Язык', related_name='subcategories')
+	category = models.ForeignKey(Category, verbose_name=u'Язык', related_name='subcategories')
 	title = models.CharField(verbose_name=u'Название', max_length=256)
 	slug = models.SlugField(verbose_name=u'Ярлык')
 
@@ -43,13 +43,14 @@ class Subcategory(models.Model):
 		posts = {}
 		topics = self.topics_subcategory.all()
 		for topic in topics:
-			post = Post.objects.filter(topic=topic).order_by('-created_at')
+			post = Post.objects.filter(topic=topic).order_by("created_at")
 			for post_item in post:
 				posts['post_item'] = {
 					'user': post_item.user,
 					'created_at': post_item.created_at,
 				}
 		return posts
+
 
 	class Meta:
 		verbose_name=u'Подкатегория'

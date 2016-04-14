@@ -25,17 +25,6 @@ def search(request):
 	if 'title' in request.GET and request.GET['title']:
 		title = request.GET.get('title', '')
 		topics = topics.filter(Q(title__icontains=title))
-		category_group = topics.values('subcategory').annotate(count=Count('subcategory'))
-		categories = []
-		for item in category_group:
-			categories.append(
-				{
-					'category': Subcategory.objects.filter(id=item['subcategory']).first(),
-					'count': item['count'],
-				}
-			)
-		context['categories'] = categories
-
 	context['topics'] = topics
 
 	return render(request, 'search.html', locals())
