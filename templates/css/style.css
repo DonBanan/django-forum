@@ -1,7 +1,49 @@
-.banner {
-	background: url(../img/banner.png) no-repeat;
-	background-size: 100% 100%;
+.header-nav-div {
+	padding: 0px !important;
+	margin: 0px;
 }
+.header-nav-nav {
+	border: 0px !important;
+	background: none !important;
+	box-shadow: none !important;
+}
+
+
+.edit-post-button, .delete-post-button {
+	padding-left: 10px;
+	float: right;
+}
+
+.topic-option {
+	padding-left: 10px;
+	font-size: 17px;
+	text-decoration: none !important;
+}
+
+
+.vote-div {
+	padding-top:20px;
+	font-size: 20px;
+	float: right;
+}
+
+.vote-div a {
+	text-decoration: none !important;
+	padding-left: 20px;
+}
+
+.good-vote {
+	color: #25b695;
+}
+
+.bad-vote {
+	color: red;
+}
+
+.search-button-main {
+	background-color: #25b695;
+}
+
 .main-table {
 	margin-bottom: 20px;
 }

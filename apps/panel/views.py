@@ -1,6 +1,8 @@
 # coding: utf-8
+import datetime
 from django.shortcuts import render
-
+from django.db.models import Sum
+from django.db.models import Avg, Count
 from django.contrib.auth.decorators import user_passes_test
 
 from ..accounts.models import User
@@ -13,6 +15,7 @@ from .forms import AddCategoryForm, AddSubcategoryForm
 def panel(request):
 	context = {}
 	context['title'] = u'Админ панель'
+	context['topics'] = Topic.objects.all()
 	return render(request, 'panel/panel.html', context)
 
 
@@ -38,14 +41,15 @@ def category(request, slug):
 	context['title'] = Category.objects.get(slug=slug).title
 	context['category'] = Category.objects.get(slug=slug)
 	context['subcategories'] = Subcategory.objects.filter(category=context['category'])
+	context['month'] = context['subcategories'].extra(select={'day':"strftime('%%Y-%%m-%%d',created_at)"}).values('day').annotate(perMonth=Sum("category")).order_by()
 	return render(request, 'panel/category.html', context)
 
 
 @user_passes_test(lambda u: u.is_superuser)
 def topics(request):
 	context = {}
-	context[''] = u'Все топики'
-	context['topics'] = Topic.objects.all().order_by('created_at')
+	context['title'] = u'Все топики'
+	context['topics'] = Topic.objects.filter(moderated=False, public=True).order_by('created_at')
 	context['moderateds'] = Moderated.objects.filter(moderated=False).order_by('-topic__id')
 	return render(request, 'panel/topics.html', context)
 

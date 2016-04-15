@@ -8,18 +8,18 @@ from django.http import HttpResponse
 from ..blog.models import Category, Subcategory, Topic, Post
 
 
-def languages_api(request):
+def categories_api(request):
 	context = {}
-	languages = []
-	for language in Category.objects.all():
+	categories = []
+	for category in Category.objects.all():
 		language_dict = {
-			"id": language.id,
-			"title": u'%s' % language.title,
-			"short_description": u'%s' % language.short_description,
-			"slug": language.slug,
+			"id": category.id,
+			"title": u'%s' % category.title,
+			"short_description": u'%s' % category.short_description,
+			"slug": category.slug,
 		}
-		languages.append(language_dict)
-	context['languages'] = languages
+		categories.append(language_dict)
+	context['categories'] = categories
 	return HttpResponse(json.dumps(context, ensure_ascii=False, indent=4), content_type="application/json; charset=utf-8")
 
 

@@ -3,6 +3,9 @@ from django.shortcuts import render, redirect
 from django.db.models import F
 from django.http import HttpResponse
 
+from django.db.models import Sum
+from django.db.models import Avg
+
 from django.contrib.auth.decorators import login_required
 
 from .models import Category, Subcategory, Topic, Post, Vote, TopicMessage
@@ -58,8 +61,8 @@ def add_topic(request, slug):
 		new_topic.user = request.user
 		new_topic.subcategory = subcategory
 		new_topic.save()
-		return redirect('subcategory', subcategory.programming_language.slug, subcategory.slug )
-	return render(request, 'topic/add-form.html', context)
+		return redirect('subcategory', subcategory.category.slug, subcategory.slug )
+	return render(request, 'topic/add-topic.html', context)
 
 
 @login_required
@@ -71,8 +74,8 @@ def edit_topic(request, id):
 	if instance.user == request.user:
 		if context['form'].is_valid():
 			context['form'].save()
-			return redirect('subcategory', instance.subcategory.programming_language.slug, instance.subcategory.slug )
-	return render(request, 'topic/add-form.html', context)
+			return redirect('subcategory', instance.subcategory.category.slug, instance.subcategory.slug )
+	return render(request, 'topic/add-topic.html', context)
 
 
 @login_required
@@ -86,7 +89,7 @@ def del_topic(request, id):
 @login_required
 def moderated(request, id):
 	context = {}
-	topic = Topic.objects.get(id=id, public=True)
+	topic = Topic.objects.get(id=id, moderated=False, public=True)
 	form = ModeratedForm(request.POST or None, request.FILES or None)
 	if form.is_valid():
 		new_mod = form.save(commit=False)
@@ -96,6 +99,7 @@ def moderated(request, id):
 		topic.public = False
 		topic.save()
 		new_mod.save()
+		return redirect('subcategory', topic.subcategory.category.slug, topic.subcategory.slug )
 	context['form'] = form
 	return render(request, 'topic/moderated.html', context)
 
@@ -103,7 +107,7 @@ def moderated(request, id):
 @login_required
 def add_post(request, id):
 	context = {}
-	topic = Topic.objects.get(id=id, public=True)
+	topic = Topic.objects.get(id=id, moderated=False, public=True)
 	context['post_form'] = PostForm(request.POST or None)
 	if context['post_form'].is_valid():
 		new_post = context['post_form'].save(commit=False)
@@ -136,7 +140,7 @@ def del_post(request, id):
 @login_required
 def good_vote(request, id):
 	context = {}
-	topic = Topic.objects.get(id=id, public=True)
+	topic = Topic.objects.get(id=id, moderated=False, public=True)
 	user_vote = Vote.objects.filter(user=request.user.id, topic=topic)
 	if not user_vote:
 		vote = Vote.objects.create(user=request.user, topic=topic)
@@ -151,7 +155,7 @@ def good_vote(request, id):
 @login_required
 def bad_vote(request, id):
 	context = {}
-	topic = Topic.objects.get(id=id, public=True)
+	topic = Topic.objects.get(id=id, moderated=False, public=True)
 	user_vote = Vote.objects.filter(user=request.user.id, topic=topic)
 	if not user_vote:
 		vote = Vote.objects.create(user=request.user, topic=topic)
@@ -167,7 +171,7 @@ def bad_vote(request, id):
 def personal_message(request, id):
 	context = {}
 	context['title'] = u'Личное сообщение'
-	context['topic'] = Topic.objects.get(id=id, public=True)
+	context['topic'] = Topic.objects.get(id=id, moderated=False, public=True)
 	context['personal_form'] = PersonalMessageForm(request.POST or None, request.FILES or None)
 	if context['personal_form'].is_valid():
 		personal_message = context['personal_form'].save(commit=False)

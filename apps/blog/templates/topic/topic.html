@@ -2,88 +2,113 @@
 {% load thumbnail %}
 {% load humanize %}
 {% block content %}
-<div>
-	<h1 class="text-center">{{ topic.title }}</h1>
-		<p>Хороших голосов: {{ topic.good_vote }}</p>
-		<p>Плохих отзывов: {{ topic.bad_vote }}</p>
-		{% if user.is_authenticated %}
-			{% if topic.user != user %}
-				<a href="{% url 'good_vote' topic.id %}">Хороший топик</a>
-				<a href="{% url 'bad_vote' topic.id %}">Плохой топик</a>
-			{% endif %}
-		{% endif %}
-
-	<p>{{ topic.user }}</p>
-	{% if topic.user.avatar %}
-		{% thumbnail topic.user.avatar "100x100" crop="center" as im %}
-			<img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
-		{% endthumbnail %}
-	{% endif %}
-	<p>{{ topic.title }}</p>
-	{{ topic.description|safe }}
-	<p>{{ topic.created_at|naturaltime }}</p>
-</div>
-
-	{% if user == topic.user %}
-		<a href="{% url 'edit_topic' topic.id %}">Редактировать</a>
-		<a href="{% url 'del_topic' topic.id %}">Удалить</a>
-	{% endif %}
-
-	{% if user.is_authenticated %}
-		<a href="{% url 'moderated' topic.id %}">Жалоба модератору</a>
-		<a href="{% url 'personal_message' topic.id %}">Написать топикпастеру</a>
-	{% endif %}
-
-
-<h2>Комментарии ({{ topic.posts.count }})</h2>
-
-<div>
-	{% for post in posts %}
-		<div>
-			{% if post.user == user %}
-				<p>Вы</p>
-			{% else %}
-				<p>{{ post.user }}</p>
-			{% endif %}
-			{% if post.user.avatar %}
-				{% thumbnail post.user.avatar "100x100" crop="center" as im %}
-					<img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
-				{% endthumbnail %}
-			{% endif %}
-			{{ post.message }}
-			<p>{{ post.created_at|naturaltime }}</p>
-			{% if user == post.user %}
-				<a href="{% url 'edit_post' post.id %}" class="edit-post-button">Редактировать</a>
-				<a href="{% url 'del_post' post.id %}" class="delete-post-button">Удалить</a>
-			{% endif %}
-		</div>
-		<div class="edit-post"></div>
-	{% endfor %}
-</div>
-
-{% if user.is_authenticated %}
-<div class="container">
 	<div class="row">
-		<div class="col-md-12">
-			<div class="widget-area no-padding blank">
-				<div class="status-upload">
-						{% include 'topic/add-post.html' %}
+		<!-- Blog Post Content Column -->
+		<div class="col-md-8 col-md-offset-2">
+			<!-- Blog Post -->
+			<!-- Title -->
+			<div class="vote-div">
+			{% if user.is_authenticated %}
+				<a href="{% url 'good_vote' topic.id %}">
+					<i class="fa fa-thumbs-o-up good-vote" aria-hidden="true"></i> {{ topic.good_vote }}
+				</a>
+				<a href="{% url 'bad_vote' topic.id %}">
+					<i class="fa fa-thumbs-o-down bad-vote" aria-hidden="true"></i> {{ topic.bad_vote }}
+				</a>
+			{% endif %}
+				</div>
+			<h1>{{ topic.title }}</h1>
+			{% if user.is_authenticated %}
+				<a href="{% url 'moderated' topic.id %}" title="Жалоба модератору" class="topic-option">
+					<i class="fa fa-lock" aria-hidden="true"></i>
+				</a>
+				<a href="{% url 'personal_message' topic.id %}" title="Написать топикпастеру" class="topic-option">
+					<i class="fa fa-envelope-o" aria-hidden="true"></i>
+				</a>
+				<a href="" title="График" class="topic-option">
+					<i class="fa fa-line-chart fa-3" aria-hidden="true"></i>
+				</a>
+			{% endif %}
+			{% if user == topic.user %}
+				<a href="{% url 'edit_topic' topic.id %}" title="Редактировать" class="topic-option">
+					<i class="fa fa-pencil" aria-hidden="true"></i>
+				</a>
+				<a href="{% url 'del_topic' topic.id %}" title="Удалить" class="topic-option">
+					<i class="fa fa-times" aria-hidden="true"></i>
+				</a>
+			{% endif %}</br>
+			<i class="fa fa-tag" aria-hidden="true"></i>
+			{% for tag in topic.tags.all %}
+				<small>{{ tag.word }}*</small>
+			{% endfor %}
+			<hr>
+			<!-- Date/Time -->
+			<p><span class="glyphicon glyphicon-time"></span> Дата создания {{ topic.created_at|naturaltime }}</p>
+			<hr>
+			<!-- Post Content -->
+			{{ topic.description }}
+			<hr>
+			<!-- Posted Comments -->
+			<!-- Comment -->
+			<h4>Комментарии ({{ topic.posts.count }})</h4>
+			{% for post in posts %}
+			<div class="media">
+				<a class="pull-left" href="#">
+					{% if post.user.avatar %}
+						{% thumbnail post.user.avatar "100x100" crop="center" as im %}
+							<img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" class="media-object">
+						{% endthumbnail %}
+					{% else %}
+						<img class="media-object" src="http://placehold.it/64x64" alt="">
+					{% endif %}
+				</a>
+				<div class="media-body">
+					<h4 class="media-heading">
+						{% if post.user == user %}
+							Вы
+						{% else %}
+							{{ post.user }}
+						{% endif %}
+						<small>{{ post.created_at|naturaltime }}</small>
+						{% if user == post.user %}
+							<small>
+								<a href="{% url 'edit_post' post.id %}" class="edit-post-button">
+									<i class="fa fa-pencil" aria-hidden="true"></i>
+								</a>
+								<a href="{% url 'del_post' post.id %}" class="delete-post-button">
+									<i class="fa fa-times" aria-hidden="true"></i>
+								</a>
+							</small>
+						{% endif %}
+					</h4>
+					{{ post.message }}
+					<div class="edit-post"></div>
+
 				</div>
 			</div>
+			{% endfor %}
+			<hr>
+			{% if user.is_authenticated %}
+			<!-- Comments Form -->
+				<h4>Написать комментарий:</h4>
+				<div class="widget-area no-padding blank">
+					<div class="status-upload">
+						{% include 'topic/add-post.html' %}
+					</div>
+				</div>
+			{% else %}
+				<div class="alert alert-danger" role="alert">Только зарегистрированные пользователи могут оставлять комментарии. <a href="{% url 'login' %}">Войдите,</a> пожалуйста.</div>
+			{% endif %}
 		</div>
 	</div>
-</div>
-{% else %}
-	<div class="alert alert-danger" role="alert">Только зарегистрированные пользователи могут оставлять комментарии. <a href="{% url 'login' %}">Войдите,</a> пожалуйста.</div>
-{% endif %}
 
-
-<script>
-$('.edit-post-button').on('click', function(e){
-	e.preventDefault();
-	$.get($(this).attr('href'), function(data) {
-		$(".edit-post_{{ post.id }}").html(data);
+	<script>
+	$('.edit-post-button').on('click', function(e){
+		e.preventDefault();
+		$.get($(this).attr('href'), function(data) {
+			$(".edit-post").html(data);
+		});
 	});
-});
-</script>
+	</script>
+
 {% endblock %}

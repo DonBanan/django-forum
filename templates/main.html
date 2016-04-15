@@ -2,13 +2,15 @@
 {% load thumbnail %}
 {% load humanize %}
 {% block content %}
+<div class="row">
+<div class="col-md-10 col-md-offset-1">
 	<div class="jumbotron no-margin-bottom no-padding-bottom banner">
 		<div class="container text-center">
 			<h2>Форум для программистов, дизайнеров и сисадминов</h2>
 			<form action="{% url 'search' %}" method="get" class="input-group col-md-6 col-md-offset-3">
 				<input type="text" class="search-query form-control" name="title" placeholder="Поиск" />
 				<span class="input-group-btn">
-					<button class="btn btn-success" type="submit">
+					<button class="btn search-button-main" type="submit">
 						<span class=" glyphicon glyphicon-search"></span>
 					</button>
 				</span>
@@ -83,4 +85,7 @@
 			<p class="right">Сегодня {{ now|date:'d (l) F Y' }}  время: {{ now|date:'H:i' }}</p>
 		</div>
 	</div>
+
+</div>
+</div>
 {% endblock content %}

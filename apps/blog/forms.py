@@ -2,10 +2,11 @@ from django import forms
 
 from ..accounts.models import User
 
-from .models import Topic, Post, TopicMessage, Moderated
+from .models import Topic, Post, TopicMessage, Moderated, Tag
 
 
 class TopicForm(forms.ModelForm):
+	tags = forms.ModelMultipleChoiceField(queryset=Tag.objects.all())
 	class Meta:
 		model = Topic
 		fields = ['title', 'description', 'tags']

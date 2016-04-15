@@ -57,11 +57,19 @@ class Subcategory(models.Model):
 		verbose_name_plural=u'Подкатегории'
 
 
+class Tag(models.Model):
+	word = models.CharField(max_length=35)
+	slug = models.CharField(max_length=250)
+
+	def __unicode__(self):
+		return self.word
+
+
 class Topic(models.Model):
 	user = models.ForeignKey(User, verbose_name=u'Юзер', related_name='topics_user')
 	subcategory = models.ForeignKey(Subcategory, verbose_name=u'Подкатегория', related_name='topics_subcategory')
 	title = models.CharField(verbose_name=u'Название', max_length=256)
-	tags = models.CharField(verbose_name=u'Теги', max_length=256)
+	tags = models.ManyToManyField(Tag, verbose_name=u'Тэги', related_name='topic_tags')
 	description = models.TextField(verbose_name=u'Описание')
 	created_at = models.DateTimeField(verbose_name=u'Дата создания', auto_now_add=True)
 	public = models.BooleanField(verbose_name=u'Публикация', default=True)
@@ -71,6 +79,10 @@ class Topic(models.Model):
 
 	def __unicode__(self):
 		return self.title
+
+	@models.permalink
+	def get_absolute_url(self):
+		return ('topic', (), {'slug': self.subcategory.slug, 'id': self.id})
 
 	def good_vote(self):
 		return self.votes.filter(good_vote=True).count()

@@ -3,6 +3,8 @@
 {% load humanize %}
 
 {% block content %}
+<div class="row">
+<div class="col-md-10 col-md-offset-1">
 <div class="jumbotron no-margin-bottom no-padding-bottom">
 	<div class="container text-center">
 		<p>{{ subcategory.title }}</p>
@@ -63,5 +65,7 @@
 		</tbody>
 		{% endfor %}
 	</table>
+</div>
+</div>
 </div>
 {% endblock %}

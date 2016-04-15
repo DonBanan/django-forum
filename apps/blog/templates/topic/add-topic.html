@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% block content %}
+
+	<div class="row">
+		<div class="col-md-8 col-md-offset-2">
+			<h2 class="text-center">Создание топика</h2>
+			<div class="panel panel-green margin-bottom-40">
+				<div class="panel-body">
+					<form action="" method="post" enctype="multipart/form-data" class="form-horizontal">
+						{% csrf_token %}
+						<div class="form-group">
+							<label for="inputEmail1" class="col-lg-2 control-label">{{ form.title.label }}</label>
+							<div class="col-lg-10">
+								<input type="text" name="{{ form.title.name }}" class="form-control" value="{{ form.title.value|default_if_none:"" }}">
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label for="inputEmail1" class="col-lg-2 control-label">{{ form.description.label }}</label>
+							<div class="col-lg-10">
+								<textarea cols="40" id="id_description" name="{{ form.description.name }}" class="form-control" rows="10">{{ form.description.value|default_if_none:"" }}</textarea>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label for="inputEmail1" class="col-lg-2 control-label">{{ form.tags.label }}</label>
+							<div class="col-lg-10">
+								{{ form.tags }}
+							</div>
+						</div>
+
+
+						<div class="form-group">
+							<div class="col-lg-offset-2 col-lg-10">
+								<button type="submit" class="btn-add-topic">Создать</button>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script>
+		$('#id_tags').addClass('form-control')
+		$(document).ready(function(){
+			$('select').select2();
+		});
+	</script>
+
+{% endblock %}
