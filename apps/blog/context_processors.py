@@ -1,4 +1,5 @@
-from .models import Category, Topic, Post
+from django.db.models import Count
+from .models import Category, Topic, Post, Tag
 
 
 def categories(request):
@@ -16,4 +17,10 @@ def topics(requets):
 def posts(requets):
 	context = {}
 	context['posts'] = Post.objects.count()
+	return context
+
+
+def tags(request):
+	context = {}
+	context['tags'] = Tag.objects.all().annotate(num_topic=Count('topic_tags')).order_by('-num_topic')
 	return context

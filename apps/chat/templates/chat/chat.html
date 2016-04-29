@@ -1,0 +1,21 @@
+{% load humanize %}
+
+{% for chat in chat_list %}
+	<div class="direct-chat-msg doted-border">
+		<div class="direct-chat-info clearfix">
+			<span class="direct-chat-name pull-left">{{ chat.user }}</span>
+		</div>
+		<!-- /.direct-chat-info -->
+		<img alt="message user image" src="http://bootsnipp.com/img/avatars/bcf1c0d13e5500875fdd5a7e8ad9752ee16e7462.jpg" class="direct-chat-img"><!-- /.direct-chat-img -->
+		<div class="direct-chat-text">
+			{{ chat.content }}
+		</div>
+		<div class="direct-chat-info clearfix">
+			<span class="direct-chat-timestamp pull-right">{{ chat.created_at|naturalday }}</span>
+		</div>
+		<div class="direct-chat-info clearfix">
+			<span class="direct-chat-img-reply-small pull-left"></span>
+		</div>
+		<!-- /.direct-chat-text -->
+	</div>
+{% endfor %}

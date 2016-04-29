@@ -50,16 +50,14 @@
 					<i class="fa fa-thumbs-down"></i> {{ topic.bad_vote }}
 				</td>
 				<td class="lastpost">
-					{% if topic.last_post %}
 					<span><dfn>Последний ответ </dfn>от <a href="">{{ topic.last_post.post.user }}</a>
-						{% if topic.user.avatar %}
-							{% thumbnail topic.last_post.post.user.avatar "20x20" crop="center" as im %}
+						{% if topic.last_post.post.avatar %}
+							{% thumbnail topic.last_post.post.avatar "20x20" crop="center" as im %}
 								<img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
 							{% endthumbnail %}
 						{% endif %}
 						<br>{{ topic.last_post.post.created_at|naturaltime }}
 					</span>
-					{% endif %}
 				</td>
 			</tr>
 		</tbody>

@@ -2,6 +2,7 @@ from django.conf.urls import url
 
 from . import views
 
+
 urlpatterns = [
 	url(r'^api/json/categories/list/$', views.categories_api, name='categories_api'),
 	url(r'^api/json/subcategories/list/$', views.subcategories_api, name='subcategories_api'),

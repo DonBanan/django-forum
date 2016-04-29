@@ -1,4 +1,5 @@
 # coding: utf-8
+import json
 from django.shortcuts import render, redirect
 from django.db.models import F
 from django.http import HttpResponse
@@ -8,7 +9,7 @@ from django.db.models import Avg
 
 from django.contrib.auth.decorators import login_required
 
-from .models import Category, Subcategory, Topic, Post, Vote, TopicMessage
+from .models import Category, Subcategory, Topic, Post, Vote, TopicMessage, Tag
 
 from .forms import TopicForm, PostForm, PersonalMessageForm, ModeratedForm
 
@@ -108,15 +109,17 @@ def moderated(request, id):
 def add_post(request, id):
 	context = {}
 	topic = Topic.objects.get(id=id, moderated=False, public=True)
-	context['post_form'] = PostForm(request.POST or None)
-	if context['post_form'].is_valid():
-		new_post = context['post_form'].save(commit=False)
+	post_form = PostForm(request.POST or None)
+	if post_form.is_valid():
+		new_post = post_form.save(commit=False)
 		new_post.user = request.user
 		new_post.topic = topic
 		new_post.save()
-		return redirect('topic', topic.subcategory.slug, topic.id)
-		context['topic'] = topic
-	return render(request, 'topic/add-post.html', context)
+		topic = topic
+		context['status'] = 'ok'
+	else:
+		context['status'] = 'Error'
+	return HttpResponse(json.dumps(context), content_type='application/json')
 
 
 @login_required
@@ -147,9 +150,10 @@ def good_vote(request, id):
 		vote.good_vote = 0
 		vote.good_vote += 1
 		vote.save()
-		return HttpResponse('ok')
+		context['status'] = 'ok'
 	else:
-		return HttpResponse('error')
+		context['status'] = 'You have vote'
+	return HttpResponse(json.dumps(context), content_type='application/json')
 
 
 @login_required
@@ -162,9 +166,10 @@ def bad_vote(request, id):
 		vote.bad_vote = 0
 		vote.bad_vote += 1
 		vote.save()
-		return HttpResponse('ok')
+		context['status'] = 'ok'
 	else:
-		return HttpResponse('error')
+		context['status'] = 'You have vote'
+	return HttpResponse(json.dumps(context), content_type='application/json')
 
 
 @login_required
@@ -213,3 +218,10 @@ def del_recipient_message(request, id):
 	message.delete_recipient = True
 	message.save()
 	return HttpResponse('ok')
+
+
+def tag(request, id):
+	context = {}
+	context['title'] = Tag.objects.get(id=id).word
+	context['tag'] = Tag.objects.get(id=id)
+	return render(request, 'blog/tag.html', context)

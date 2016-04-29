@@ -1,4 +1,4 @@
-from django.conf.urls import patterns, include, url
+	from django.conf.urls import patterns, include, url
 from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
@@ -16,13 +16,15 @@ urlpatterns = patterns('',
 	url(r'^admin/', include(admin.site.urls)),
 
 	#Search
-	url(r'^search/$', 'apps.views.search', name='search'),
+	url(r'^search/$', views.search, name='search'),
 
 	# Panel
 	url(r'^', include('apps.panel.urls')),
 
 	#Accounts
 	url(r'^', include('apps.accounts.urls')),
+
+	url(r'^', include('apps.chat.urls')),
 
 	#Blog
 	url(r'^', include('apps.blog.urls')),

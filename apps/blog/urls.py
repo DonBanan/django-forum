@@ -28,6 +28,9 @@ urlpatterns = [
 	url(r'^del-recipient-message/(?P<id>\d+)/$', views.del_recipient_message, name='del_recipient_message'),
 
 
+	url(r'^tag/(?P<id>\d+)/$', views.tag, name='tag'),
+
+
 	url(r'^all-language/$', views.all_language, name='all_language'),
 	url(r'^(?P<slug>[\w-]+)/$', views.language, name='language'),
 	url(r'^(?P<category_slug>[\w-]+)/(?P<subcategory_slug>[\w-]+)/$', views.subcategory, name='subcategory'),

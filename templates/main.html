@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 {% load thumbnail %}
 {% load humanize %}
+{% load chat_form %}
 {% block content %}
-<div class="row">
-<div class="col-md-10 col-md-offset-1">
+
 	<div class="jumbotron no-margin-bottom no-padding-bottom banner">
 		<div class="container text-center">
 			<h2>Форум для программистов, дизайнеров и сисадминов</h2>
@@ -38,17 +38,18 @@
 					</td>
 					<td class="topics text-center"><span class="badge">{{ sub.topic_count }}</span></td>
 					<td class="posts text-center"><span class="badge">{{ sub.topic_posts_count }}</span></td>
-					<td class="lastpost">
-							{% if sub.topic_last_post.post_item.user %}
-								<span><dfn>Последний ответ</dfn> от <a href="">{{ sub.topic_last_post.post_item.user }}</a>
-							{% if topic.user.avatar %}
-								{% thumbnail topic.user.avatar "20x20" crop="center" as im %}
-									<img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
-								{% endthumbnail %}
-							{% endif %}
-							<br>{{ sub.topic_last_post.post_item.created_at|naturaltime }}
-							</span>
-							{% endif %}
+					<td class="posts text-center">
+						{% if sub.topic_last_post.post.user %}
+							<span><dfn>Последний ответ</dfn> от <a href="">{{ sub.topic_last_post.post.user }}</a>
+						{% if topic.user.avatar %}
+							{% thumbnail topic.user.avatar "20x20" crop="center" as im %}
+								<img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
+							{% endthumbnail %}
+						{% endif %}
+						<br>{{ sub.topic_last_post.post.title}}
+						<br>{{ sub.topic_last_post.post.created_at|naturaltime }}
+						</span>
+						{% endif %}
 					</td>
 				</tr>
 			{% endfor %}
@@ -56,6 +57,22 @@
 		</table>
 	{% endfor %}
 
+	<div class="panel panel-info">
+		<div class="panel-heading">
+			<h3 class="panel-title"><i class="fa fa-tag" aria-hidden="true"></i> Популярные теги</h3>
+		</div>
+		<div class="panel-body">
+			{% for tag in tags %}
+				{% if tag.topic_tags.count > 0 %}
+					{% if forloop.last %}
+						<a href="{{ tag.get_absolute_url }}"><i class="fa fa-hashtag" aria-hidden="true"></i> {{ tag.word }}</a>
+					{% else %}
+						<a href="{{ tag.get_absolute_url }}"><i class="fa fa-hashtag" aria-hidden="true"></i> {{ tag.word }}</a>,
+					{% endif %}
+				{% endif %}
+			{% endfor %}
+		</div>
+	</div>
 
 	<div class="panel panel-info">
 		<div class="panel-heading">
@@ -74,6 +91,7 @@
 		</div>
 	</div>
 
+
 	<div class="panel panel-info">
 		<div class="panel-heading">
 			<h3 class="panel-title"><i class="fa fa-area-chart"></i> Статистика</h3>
@@ -85,7 +103,4 @@
 			<p class="right">Сегодня {{ now|date:'d (l) F Y' }}  время: {{ now|date:'H:i' }}</p>
 		</div>
 	</div>
-
-</div>
-</div>
 {% endblock content %}

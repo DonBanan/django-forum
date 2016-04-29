@@ -8,15 +8,18 @@
 			<!-- Blog Post -->
 			<!-- Title -->
 			<div class="vote-div">
-			{% if user.is_authenticated %}
-				<a href="{% url 'good_vote' topic.id %}">
-					<i class="fa fa-thumbs-o-up good-vote" aria-hidden="true"></i> {{ topic.good_vote }}
-				</a>
-				<a href="{% url 'bad_vote' topic.id %}">
-					<i class="fa fa-thumbs-o-down bad-vote" aria-hidden="true"></i> {{ topic.bad_vote }}
-				</a>
-			{% endif %}
-				</div>
+				{% if user.is_authenticated %}
+					<a href="{{ topic.positive_vote }}" data-id='topic_{{ topic.id }}' class='good_vote'>
+						<i class="fa fa-thumbs-o-up good-vote" aria-hidden="true"></i>
+						<span class='topic-good_vote__count'>{{ topic.good_vote }}</span>
+					</a>
+					<a href="{{ topic.negative_vote }}" data-id='topic_{{ topic.id }}' class='bad_vote'>
+						<i class="fa fa-thumbs-o-down bad-vote" aria-hidden="true"></i>
+						<span class='topic-bad_vote__count'>{{ topic.bad_vote }}</span>
+					</a>
+				{% endif %}
+				<p id='error-text'></p>
+			</div>
 			<h1>{{ topic.title }}</h1>
 			{% if user.is_authenticated %}
 				<a href="{% url 'moderated' topic.id %}" title="Жалоба модератору" class="topic-option">
@@ -52,7 +55,7 @@
 			<!-- Comment -->
 			<h4>Комментарии ({{ topic.posts.count }})</h4>
 			{% for post in posts %}
-			<div class="media">
+			<div class="media" id='post_{{ post.id }}'>
 				<a class="pull-left" href="#">
 					{% if post.user.avatar %}
 						{% thumbnail post.user.avatar "100x100" crop="center" as im %}
@@ -72,17 +75,17 @@
 						<small>{{ post.created_at|naturaltime }}</small>
 						{% if user == post.user %}
 							<small>
-								<a href="{% url 'edit_post' post.id %}" class="edit-post-button">
+								<a href="{{ post.edit_post }}" class="edit-post-button" data-id="edit_post_{{ post.id }}">
 									<i class="fa fa-pencil" aria-hidden="true"></i>
 								</a>
-								<a href="{% url 'del_post' post.id %}" class="delete-post-button">
+								<a href="{{ post.delete_post }}" class="delete-post-button" data-id='post_{{ post.id }}'>
 									<i class="fa fa-times" aria-hidden="true"></i>
 								</a>
 							</small>
 						{% endif %}
 					</h4>
 					{{ post.message }}
-					<div class="edit-post"></div>
+					<div id='edit_post_{{ post.id }}'></div>
 
 				</div>
 			</div>
@@ -101,14 +104,4 @@
 			{% endif %}
 		</div>
 	</div>
-
-	<script>
-	$('.edit-post-button').on('click', function(e){
-		e.preventDefault();
-		$.get($(this).attr('href'), function(data) {
-			$(".edit-post").html(data);
-		});
-	});
-	</script>
-
 {% endblock %}

@@ -42,6 +42,7 @@ INSTALLED_APPS = (
     'apps.accounts',
     'apps.blog',
     'apps.api',
+    'apps.chat',
 )
 
 THUMBNAIL_DEBUG = True
@@ -98,6 +99,7 @@ TEMPLATES = [
                 'apps.blog.context_processors.categories',
                 'apps.blog.context_processors.topics',
                 'apps.blog.context_processors.posts',
+                'apps.blog.context_processors.tags',
             ],
             'debug': True,
         },

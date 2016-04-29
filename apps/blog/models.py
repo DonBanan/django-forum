@@ -41,16 +41,18 @@ class Subcategory(models.Model):
 
 	def topic_last_post(self):
 		posts = {}
-		topics = self.topics_subcategory.all()
+		topics = Topic.objects.filter(subcategory=self.id)
 		for topic in topics:
-			post = Post.objects.filter(topic=topic).order_by("created_at")
-			for post_item in post:
-				posts['post_item'] = {
-					'user': post_item.user,
-					'created_at': post_item.created_at,
+			post_items = Post.objects.filter(topic=topic, public=False).order_by('-created_at')[:1]
+			print post_items
+			for post in post_items:
+				posts['post'] = {
+					'user': post.user,
+					'avatar': post.user.avatar,
+					'title': post.message,
+					'created_at': post.created_at,
 				}
 		return posts
-
 
 	class Meta:
 		verbose_name=u'Подкатегория'
@@ -63,6 +65,10 @@ class Tag(models.Model):
 
 	def __unicode__(self):
 		return self.word
+
+	@models.permalink
+	def get_absolute_url(self):
+		return ('tag', (), {'id': self.id})
 
 
 class Topic(models.Model):
@@ -84,6 +90,14 @@ class Topic(models.Model):
 	def get_absolute_url(self):
 		return ('topic', (), {'slug': self.subcategory.slug, 'id': self.id})
 
+	@models.permalink
+	def positive_vote(self):
+		return ('good_vote', (), {'id': self.id})
+
+	@models.permalink
+	def negative_vote(self):
+		return ('bad_vote', (), {'id': self.id})
+
 	def good_vote(self):
 		return self.votes.filter(good_vote=True).count()
 
@@ -93,6 +107,17 @@ class Topic(models.Model):
 	def posts_count(self):
 		posts_with_counts = self.topics_subcategory.filter(public=True).annotate(issue_count=Count('posts'))
 		return posts_with_counts
+
+	def last_post(self):
+		posts = {}
+		post_items = self.posts.filter(public=False).order_by('-created_at')[:1]
+		for post in post_items:
+			posts['post'] = {
+				'user': post.user,
+				'avatar': post.user.avatar,
+				'created_at': post.created_at,
+			}
+		return posts
 
 
 	class Meta:
@@ -117,6 +142,14 @@ class Post(models.Model):
 
 	def __unicode__(self):
 		return self.message
+
+	@models.permalink
+	def edit_post(self):
+		return ('edit_post', (), {'id': self.id})
+
+	@models.permalink
+	def delete_post(self):
+		return ('del_post', (), {'id': self.id})
 
 
 class Vote(models.Model):

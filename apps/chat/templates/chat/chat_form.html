@@ -1,0 +1,82 @@
+{% load humanize %}
+{% load chat_list %}
+
+<div class="container text-center">
+	<div class="row">
+		<div class="round hollow text-center">
+		<a href="#" id="addClass"><span class="glyphicon glyphicon-comment"></span> Чат </a>
+		</div>
+		<hr>
+	</div>
+</div>
+
+
+<div class="popup-box chat-popup" id="qnimate">
+	<div class="popup-head">
+		<div class="popup-head-left pull-left">
+			<img src="http://bootsnipp.com/img/avatars/bcf1c0d13e5500875fdd5a7e8ad9752ee16e7462.jpg" alt="iamgurdeeposahan"> {{ user }}
+		</div>
+		<div class="popup-head-right pull-right">
+			<button data-widget="remove" id="removeClass" class="chat-header-button pull-right" type="button">
+				<i class="glyphicon glyphicon-off"></i>
+			</button>
+		</div>
+	</div>
+
+<div class="popup-messages">
+	<div class="direct-chat-messages">
+		<div class="chat-box-single-line">
+			<abbr class="timestamp">October 8th, 2015</abbr>
+		</div>
+		<!-- Message. Default to the left -->
+
+		{% chat_list %}
+		<div id="chat"></div>
+		<!-- /.direct-chat-msg -->
+		</div>
+	</div>
+		<div class="popup-messages-footer">
+			<form action="" method="post" id="comment_form">
+				{% csrf_token %}
+				<input id="status_message" placeholder="Type a message..." name="{{ chat_form.content.name }}">
+				<div class="btn-footer">
+					<button tyepe="submit" class="bg_none pull-right"><i class="glyphicon glyphicon-thumbs-up"></i> </button>
+				</div>
+			</form>
+		</div>
+</div>
+
+
+<script>
+$(document).ready(function(){
+	$("#comment_form").submit(function(e){
+		e.preventDefault();
+		var form = $(this);
+		var data = form.serialize();
+		$.ajax({
+			type: 'POST',
+			url: form.attr('action'),
+			data: data,
+			success: function(data){
+				$('.results').html(data);
+				var refreshId = setInterval(function() {
+					$("#chat").load('/chat-form');
+				}, 1000);
+				$('#status_message').val('');
+			}
+		});
+	});
+});
+</script>
+
+
+<script>
+$(function(){
+	$("#addClass").click(function () {
+		$('#qnimate').addClass('popup-box-on');
+	});
+	$("#removeClass").click(function () {
+		$('#qnimate').removeClass('popup-box-on');
+	});
+})
+</script>
