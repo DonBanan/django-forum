@@ -7,3 +7,5 @@ function.txt
 /media/
 /venv/
 structure.txt
+docs/_build/
+_templates
