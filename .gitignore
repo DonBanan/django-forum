@@ -6,6 +6,7 @@ db.sqlite3
 function.txt
 /media/
 /venv/
+/static/
 structure.txt
 docs/_build/
 _templates

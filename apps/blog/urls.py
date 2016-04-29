@@ -13,6 +13,7 @@ urlpatterns = [
 	url(r'^moderated-topic/(?P<id>\d+)/$', views.moderated, name='moderated'),
 
 
+	url(r'^posts/(?P<id>\d+)/$', views.posts, name='posts'),
 	url(r'^add-post/(?P<id>\d+)/$', views.add_post, name='add_post'),
 	url(r'^edit-post/(?P<id>\d+)/$', views.edit_post, name='edit_post'),
 	url(r'^del-post/(?P<id>\d+)/$', views.del_post, name='del_post'),

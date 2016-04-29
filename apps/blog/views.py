@@ -40,10 +40,10 @@ def topic(request, subcategory_slug, id):
 	context = {}
 	context['title'] = u'Все топики'
 	topic = Topic.objects.get(subcategory__slug=subcategory_slug, id=id, public=True)
-	context['posts'] = Post.objects.filter(topic=topic).order_by('-created_at')
 	topic.count_views += 1
 	context['good_vote'] = Vote.objects.filter(topic=topic, good_vote=True).count()
 	context['bad_vote'] = Vote.objects.filter(topic=topic, bad_vote=True).count()
+	context['posts'] = Post.objects.filter(topic=topic).order_by('-created_at')
 	context['post_form'] = PostForm()
 	context['count_view'] = Topic.objects.filter(id=topic.id).update(count_views=F('count_views') + 1)
 	topic.save()
@@ -103,6 +103,14 @@ def moderated(request, id):
 		return redirect('subcategory', topic.subcategory.category.slug, topic.subcategory.slug )
 	context['form'] = form
 	return render(request, 'topic/moderated.html', context)
+
+
+@login_required
+def posts(request, id):
+	context = {}
+	topic = Topic.objects.get(id=id, moderated=False, public=True)
+	context['posts'] = Post.objects.filter(topic=topic).order_by('-created_at')
+	return render(request, 'topic/posts.html', context)
 
 
 @login_required

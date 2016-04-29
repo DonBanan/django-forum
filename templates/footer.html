@@ -1,5 +1,9 @@
 {% load chat_form %}
-{% chat_form %}
+
+{% if user.is_authenticated %}
+	{% chat_form %}
+{% endif %}
+
 <div id="site-footer">
 	<div class="chunk"> Разработка Next IT 2016</div>
 </div>

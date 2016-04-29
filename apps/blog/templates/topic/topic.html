@@ -53,43 +53,10 @@
 			<hr>
 			<!-- Posted Comments -->
 			<!-- Comment -->
-			<h4>Комментарии ({{ topic.posts.count }})</h4>
-			{% for post in posts %}
-			<div class="media" id='post_{{ post.id }}'>
-				<a class="pull-left" href="#">
-					{% if post.user.avatar %}
-						{% thumbnail post.user.avatar "100x100" crop="center" as im %}
-							<img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" class="media-object">
-						{% endthumbnail %}
-					{% else %}
-						<img class="media-object" src="http://placehold.it/64x64" alt="">
-					{% endif %}
-				</a>
-				<div class="media-body">
-					<h4 class="media-heading">
-						{% if post.user == user %}
-							Вы
-						{% else %}
-							{{ post.user }}
-						{% endif %}
-						<small>{{ post.created_at|naturaltime }}</small>
-						{% if user == post.user %}
-							<small>
-								<a href="{{ post.edit_post }}" class="edit-post-button" data-id="edit_post_{{ post.id }}">
-									<i class="fa fa-pencil" aria-hidden="true"></i>
-								</a>
-								<a href="{{ post.delete_post }}" class="delete-post-button" data-id='post_{{ post.id }}'>
-									<i class="fa fa-times" aria-hidden="true"></i>
-								</a>
-							</small>
-						{% endif %}
-					</h4>
-					{{ post.message }}
-					<div id='edit_post_{{ post.id }}'></div>
-
-				</div>
+			<h4 class="post_count">Комментарии ({{ topic.posts.count }})</h4>
+			<div class="post_load">
+				{% include 'topic/posts.html' %}
 			</div>
-			{% endfor %}
 			<hr>
 			{% if user.is_authenticated %}
 			<!-- Comments Form -->

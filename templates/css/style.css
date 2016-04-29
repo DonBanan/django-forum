@@ -182,12 +182,7 @@ th a {
 
 
 
-@import url(https://fonts.googleapis.com/css?family=Oswald:400,300);
-@import url(https://fonts.googleapis.com/css?family=Open+Sans);
-body
-{
-    font-family: 'Open Sans', sans-serif;
-    }
+
 .popup-box {
    background-color: #ffffff;
     border: 1px solid #b0b0b0;
@@ -202,25 +197,7 @@ body
 .round.hollow {
     margin: 40px 0 0;
 }
-.round.hollow a {
-    border: 2px solid #ff6701;
-    border-radius: 35px;
-    color: red;
-    color: #ff6701;
-    font-size: 23px;
-    padding: 10px 21px;
-    text-decoration: none;
-    font-family: 'Open Sans', sans-serif;
-}
-.round.hollow a:hover {
-    border: 2px solid #000;
-    border-radius: 35px;
-    color: red;
-    color: #000;
-    font-size: 23px;
-    padding: 10px 21px;
-    text-decoration: none;
-}
+
 .popup-box-on {
     display: block !important;
 }

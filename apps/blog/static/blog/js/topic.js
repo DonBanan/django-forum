@@ -1,4 +1,4 @@
-$('.btn-add-topic').on('click', function(e){
+$('.btn-add-post').on('click', function(e){
 	e.preventDefault();
 	var msg = $('#formx').serialize();
 	send_post_url = $('#formx').attr('action');
@@ -8,7 +8,7 @@ $('.btn-add-topic').on('click', function(e){
 		data: msg,
 		success: function(response) {
 			if (response.status == 'ok') {
-				// $('.media').html(response);
+				$( ".post_load" ).load("/posts/" + "1");
 			}
 		},
 		error:  function(xhr, str){
@@ -34,9 +34,13 @@ $('.delete-post-button').on('click', function(e){
 	e.preventDefault();
 	delete_post_url = $(this).attr('href');
 	delete_post_data = $('#' + $(this).data('id'));
+	vote_count = $('.post_count');
 	$.get(delete_post_url)
 	.done(function(response) {
 		delete_post_data.remove();
+		var old_count = parseInt(vote_count.text(), 10);
+		var new_count = old_count - 1;
+		vote_count.text(new_count);
 	})
 });
 
