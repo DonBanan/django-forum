@@ -2,13 +2,14 @@ $('.btn-add-post').on('click', function(e){
 	e.preventDefault();
 	var msg = $('#formx').serialize();
 	send_post_url = $('#formx').attr('action');
+	topic_url = $('.btn-add-post').data('id');
 	$.ajax({
 		type: 'POST',
 		url: send_post_url,
 		data: msg,
 		success: function(response) {
 			if (response.status == 'ok') {
-				$( ".post_load" ).load("/posts/" + "1");
+				$( ".post_load" ).load("/posts/" + topic_url);
 			}
 		},
 		error:  function(xhr, str){
@@ -26,7 +27,7 @@ $('.edit-post-button').on('click', function(e){
 	edit_post_data = $('#' + $(this).data('id'));
 	$.get(edit_post_url)
 	.done(function(response) {
-		edit_post_data.html(response);
+		$('#id_massage').val(response);
 	})
 });
 
