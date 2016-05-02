@@ -9,7 +9,7 @@
 }
 
 
-.edit-post-button, .delete-post-button {
+.post_edit_button, .delete-post-button {
 	padding-left: 10px;
 	float: right;
 }

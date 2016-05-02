@@ -5,6 +5,35 @@
 		{% for field in post_form %}
 			{{ field }}
 		{% endfor %}
-		<button type="submit" class="btn btn-default btn-add-post" data-id="{{ topic.id }}"><i class="fa fa-commenting"></i> Оставить коментарий</button>
+		<button type="submit" class="btn btn-default post_add_save_button" data-id="{{ topic.id }}"><i class="fa fa-commenting"></i> Оставить коментарий</button>
 	</div>
 </form>
+
+
+<script>
+	var vote_count = $('.post-count');
+
+	$('.post_add_save_button').on('click', function(e){
+		e.preventDefault();
+		var msg = $('#formx').serialize();
+		send_post_url = $('#formx').attr('action');
+		topic_url = $('.post_add_save_button').data('id');
+		$.ajax({
+			type: 'POST',
+			url: send_post_url,
+			data: msg,
+			success: function(response) {
+				if (response.status == 'ok') {
+					$( ".post_load" ).load("/posts/" + topic_url);
+					var old_count = parseInt(vote_count.text(), 10);
+					var new_count = old_count + 1;
+					vote_count.text(new_count);
+					$('#id_message').val(" ");
+				}
+			},
+			error:  function(xhr, str){
+					alert('Возникла ошибка: ' + xhr.responseCode);
+			}
+		});
+	});
+</script>

@@ -24,7 +24,7 @@
 				<small>{{ post.created_at|naturaltime }}</small>
 				{% if user == post.user %}
 					<small>
-						<a href="{{ post.edit_post }}" class="edit-post-button" data-id="edit_post_{{ post.id }}">
+						<a href='{{ post.edit_post }}' class="post_edit_button" data-id='post_{{ post.id }}'>
 							<i class="fa fa-pencil" aria-hidden="true"></i>
 						</a>
 						<a href="{{ post.delete_post }}" class="delete-post-button" data-id='post_{{ post.id }}'>
@@ -33,9 +33,97 @@
 					</small>
 				{% endif %}
 			</h4>
-			{{ post.message }}
-			<div id='edit_post_{{ post.id }}'></div>
+			<div id='post_edit_{{ post.id }}' class='b-post__text'>{{ post.message }}</div>
+
+			<a href='{{ post.edit_post }}' class='post_save_button'  data-id='post_{{ post.id }}' data-token='{{ csrf_token }}'>редактировать</a>
 
 		</div>
 	</div>
 {% endfor %}
+
+
+<script>
+
+	$('.post_save_button').hide();
+
+	$('.post_edit_button').on('click', function(e){
+		e.preventDefault();
+		edit_post_textarea = $('#' + $(this).data('id') + ' .b-post__text');
+		edit_post_textarea.attr('contenteditable', 'true');
+		edit_post_textarea.addClass('active-edit');
+		edit_post_button = $('#' + $(this).data('id') + ' .post_save_button');
+		edit_post_button.show();
+	});
+
+	$('.post_save_button').on('click', function(e){
+		e.preventDefault();
+
+		edit_post_url = $(this).attr('href');
+		edit_post = $('#' + $(this).data('id'));
+		edit_token = $(this).data('token');
+		edit_post_textarea = $('#' + $(this).data('id') + ' .b-post__text');
+
+		data = {
+			'message': edit_post_textarea.text(),
+			csrfmiddlewaretoken: edit_token
+		}
+
+		$.post(edit_post_url, data)
+		.done(function(response){
+			edit_post_textarea.attr('contenteditable', 'false');
+			edit_post_textarea.removeClass('active-edit');
+			$('.post_save_button').hide();
+		})
+	});
+
+	$('.delete-post-button').on('click', function(e){
+		e.preventDefault();
+		delete_post_url = $(this).attr('href');
+		delete_post_data = $('#' + $(this).data('id'));
+		$.get(delete_post_url)
+		.done(function(response) {
+			delete_post_data.remove();
+			var old_count = parseInt(vote_count.text(), 10);
+			var new_count = old_count - 1;
+			vote_count.text(new_count);
+		})
+	});
+
+	$('.good_vote').on('click', function(e){
+		e.preventDefault();
+
+		$this = $(this);
+		url = $this.attr('href');
+		vote_count = $('.topic-good_vote__count');
+
+		$.get(url)
+		.done(function(response) {
+			if (response.status == 'ok') {
+				var old_count = parseInt(vote_count.text(), 10);
+				var new_count = old_count + 1;
+				vote_count.text(new_count);
+			} else {
+				$("#error-text").html('Вы уже проголосовали');
+			}
+		})
+	})
+
+	$('.bad_vote').on('click', function(e){
+		e.preventDefault();
+
+		$this = $(this);
+		url = $this.attr('href');
+		vote_count = $('.topic-bad_vote__count');
+
+		$.get(url)
+		.done(function(response) {
+			if (response.status == 'ok') {
+				var old_count = parseInt(vote_count.text(), 10);
+				var new_count = old_count + 1;
+				vote_count.text(new_count);
+			} else {
+				$("#error-text").html('Вы уже проголосовали');
+			}
+		})
+	})
+</script>

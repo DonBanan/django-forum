@@ -53,7 +53,10 @@
 			<hr>
 			<!-- Posted Comments -->
 			<!-- Comment -->
-			<h4 class="post_count">Комментарии ({{ topic.posts.count }})</h4>
+			<h4 class="post_count">Комментарии (
+				<span class="post-count">{{ topic.posts.count }}</span>
+
+			)</h4>
 			<div class="post_load">
 				{% include 'topic/posts.html' %}
 			</div>

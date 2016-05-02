@@ -6,6 +6,6 @@
 			<label>{{ field.label }}</label>
 			{{ field }}
 		{% endfor %}
-		<input type="submit">
+		<input type="submit" class="post_edit_save_button" data-token="{{ csrf_token }}">
 	</div>
 </form>
